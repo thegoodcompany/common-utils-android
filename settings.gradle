@@ -1,0 +1,3 @@
+include ':common-utils-demo'
+include ':common-utils'
+rootProject.name = "common-utils-android"
