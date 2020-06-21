@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".SystemUtilsActivity">
+
+    <com.microsoft.fluentui.appbarlayout.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/input_manager_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_layout_margin"
+        android:layout_marginTop="@dimen/default_view_margin"
+        android:text="@string/heading_imm"
+        android:textAppearance="@style/TextAppearance.FluentUI.Headline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fluentui_divider_height"
+        android:layout_marginTop="@dimen/fluentui_content_inset"
+        android:background="@drawable/ms_row_divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_manager_heading" />
+
+    <Button
+        android:id="@+id/showKeyboardButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_view_margin"
+        android:text="@string/show_keyboard"
+        app:layout_constraintStart_toStartOf="@+id/input_manager_heading"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
+    <Button
+        android:id="@+id/hide_keyboard_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_view_margin"
+        android:text="@string/hide_keyboard"
+        app:layout_constraintStart_toStartOf="@+id/showKeyboardButton"
+        app:layout_constraintTop_toBottomOf="@+id/showKeyboardButton" />
+
+    <EditText
+        android:id="@+id/simple_edit_text"
+        style="@style/Widget.AppTheme.EditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_view_margin"
+        android:layout_marginEnd="@dimen/default_layout_margin"
+        android:ems="10"
+        android:hint="@string/example_edit_text_hint"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/hide_keyboard_button"
+        app:layout_constraintTop_toBottomOf="@+id/hide_keyboard_button" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

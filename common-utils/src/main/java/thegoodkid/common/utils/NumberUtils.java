@@ -1,6 +1,7 @@
 package thegoodkid.common.utils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
@@ -25,16 +26,19 @@ public class NumberUtils {
 
     /**
      * Removes any unwanted characters from the string and parses it
-     * into a double absolute value.
+     * into a double wrapper object.
      * If the the string contains multiple points (.), only
      * the last one stays
+     * <p>
+     * This can be useful specially in places like query
      *
-     * @param str      The string from which number are to be extracted
-     * @param fallback The fallback number to be returned if the string
-     *                 can't be parsed into a double value
-     * @return A double value from the given string
+     * @param str      The string from which numbers are to be extracted
+     * @param fallback The fallback object to be returned if the string
+     *                 can't be parsed into a double wrapper object
+     * @return A Double Object from the given string
      */
-    public static double extractNumbers(@NonNull String str, double fallback) {
+    @Nullable
+    public static Double extractNumbers(@NonNull String str, @Nullable Double fallback) {
         StringBuilder builder = new StringBuilder(str);
 
         for (int latestDotIndex = builder.indexOf("."), lastDotIndex = builder.lastIndexOf(".");

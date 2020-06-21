@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">Common Utils Demo</string>
+
+    <!--as is-->
+    <string name="show_keyboard">Show Keyboard</string>
+    <string name="hide_keyboard">Hide Keyboard</string>
+    <string name="example_edit_text_hint">Type anything…</string>
+    <string name="add_item">Create Item</string>
+    <string name="remove_item">Remove Item</string>
+    <string name="add_section">Create Section</string>
+    <string name="remove_section">Remove Section</string>
+    <string name="action">Action</string>
+    <string name="reset">Start Over</string>
+
+    <!--headings-->
+    <string name="heading_imm">Input Manager</string>
+    <string name="heading_number_extraction">Number Extraction</string>
+
+    <!--messages-->
+    <string name="section_full">Available sections are already created.</string>
+    <string name="result_string_with_number">Extracted Number will be Showed Here</string>
+    <string name="on_list_item_click">Item clicked</string>
+
+    <!--hints-->
+    <string name="hint_string_with_number">May or may not contain number</string>
 </resources>

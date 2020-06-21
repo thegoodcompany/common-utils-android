@@ -1,10 +1,28 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="Base.AppTheme" parent="Theme.FluentUI">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">?attr/fluentuiBackgroundColor</item>
+        <item name="background">@null</item>
+        <item name="android:statusBarColor">?android:colorPrimary</item>
+    </style>
+
+    <style name="Base.Widget.AppTheme" parent="Widget.FluentUI" />
+
+    <style name="Base.Widget.AppTheme.EditText" parent="Widget.AppCompat.EditText">
+        <item name="backgroundTint">@color/edit_text_background_tint</item>
+        <item name="android:textColorHint">?attr/fluentuiPeoplePickerHintTextColor</item>
+    </style>
+
+    <style name="AppTheme" parent="Base.AppTheme" />
+
+    <style name="Widget.AppTheme" parent="Base.Widget.AppTheme" />
+
+    <style name="Widget.AppTheme.EditText" parent="Base.Widget.AppTheme.EditText" />
+
+    <style name="TextAppearance.AppTheme.SectionAccessoryValue" parent="TextAppearance.FluentUI.SubHeading1">
+        <item name="android:textColor">?attr/fluentuiForegroundSecondaryColor</item>
     </style>
 
 </resources>
