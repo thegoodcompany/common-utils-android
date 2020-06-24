@@ -5,7 +5,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class HeaderItem implements BaseItem {
+public class HeaderItem implements BaseHeaderItem {
     @NonNull
     private String mTitle;
     @Nullable
@@ -17,7 +17,6 @@ public class HeaderItem implements BaseItem {
     }
 
     @NonNull
-    @Override
     public String getTitle() {
         return mTitle;
     }

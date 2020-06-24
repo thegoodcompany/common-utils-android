@@ -4,10 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class NumberUtils {
     /**
      * Turns an {@link ArrayList} of integers into an array of integers
+     * In places of null elements, the returned array has 0
+     *
      * @param integers The {@link ArrayList} of integers that will be converted
      * @return An array of integers from the given {@link ArrayList}
      */
@@ -15,13 +18,21 @@ public class NumberUtils {
     public static int[] toArray(@NonNull ArrayList<Integer> integers) {
         int[] ints = new int[integers.size()];
 
-        int count = 0;
-        for (int x : integers) {
-            ints[count] = x;
-            count++;
+        int size = integers.size();
+        for (int i = 0; i < size; i++) {
+            Integer x = integers.get(i);
+            if (x == null) continue;
+
+            ints[i] = x;
         }
 
         return ints;
+    }
+
+    @NonNull
+    public static int[] toArrayRemoveNull(@NonNull ArrayList<Integer> integers) {
+        integers.removeAll(Collections.singleton(null));
+        return toArray(integers);
     }
 
     /**

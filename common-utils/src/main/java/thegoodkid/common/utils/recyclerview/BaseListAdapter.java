@@ -8,7 +8,14 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
-public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
+/**
+ * @param <H> Header Item Type
+ * @param <I> Item Type
+ * @param <K> Section Key
+ * @param <V> Section Type
+ * @param <VH> View Holder
+ */
+public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>, H extends BaseHeaderItem, I extends BaseItem,
         VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
     private LinkedHashMap<K, V> mSectionMap;
@@ -42,42 +49,40 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
     protected abstract void onBindViewHolder(@NonNull AfterWards runAfterwards, @NonNull VH holder, int position);
 
     /**
-     * Get view type of the item at {@code position}
+     * Get view type of the item at {@code pos}
      * The default implementation covers only types at {@link ViewType}
      * Consider overriding this method when more are required
      * It is also convenient to use the id resource to identify view types
      *
-     * @param position Position to query
+     * @param pos Position to query
      * @return An int value representing the view type
      */
     @Override
-    public int getItemViewType(int position) {
-        int evaluatingPosition = 0;
-        int containerSectionPosition = 0;
+    public int getItemViewType(int pos) {
+        int evaluatingPos = 0;
+        int sectionContainerPos = 0;
 
         for (V section : mSectionMap.values()) {
             boolean sectionHasHeader = section.hasHeader();
+            evaluatingPos += section.getItemCount() + (sectionHasHeader ? 1 : 0);
 
-            evaluatingPosition += section.getItemCount() + (sectionHasHeader ? 1 : 0);
+            if (evaluatingPos > pos) {
+                if (sectionContainerPos == pos && sectionHasHeader) return ViewType.HEADER.ordinal();
 
-            if (evaluatingPosition > position) {
-                if (containerSectionPosition == position && sectionHasHeader)
-                    return ViewType.HEADER.ordinal();
+                int indexAtSection = pos - sectionContainerPos - (sectionHasHeader ? 1 : 0);
+                I item = section.getItem(indexAtSection);
 
-                int indexAtSection = position - containerSectionPosition - (sectionHasHeader ? 1 : 0);
-                BaseItem item = section.getItem(indexAtSection);
-
-                if (item instanceof ButtonItem) return ViewType.BUTTON.ordinal();
-                else return ViewType.ITEM.ordinal();
+                if (item instanceof BaseButtonItem) return ViewType.BUTTON.ordinal();
+                return ViewType.ITEM.ordinal();
             }
 
-            containerSectionPosition = evaluatingPosition;
+            sectionContainerPos = evaluatingPos;
         }
 
-        throw new AssertionError("No view type found at position: " + position);
+        throw new IllegalStateException("Unknown view type at position: " + pos);
     }
 
-    public boolean containSection(K sectionKey) {
+    public boolean hasSection(K sectionKey) {
         return mSectionMap.containsKey(sectionKey);
     }
 
@@ -88,14 +93,14 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
      * @param item The item to be added
      * @throws NullPointerException When specified section is not present
      */
-    public void addItem(K key, BaseItem item) {
+    public void addItem(K key, I item) {
         V section = mSectionMap.get(key);
         if (section != null) {
             section.addItem(item);
 
             notifyItemInserted(getSectionStartPosition(key) + getItemCount() - (section.hasHeader() ? 0 : 1));
         } else {
-            throw generateSectionNotPresentException(key);
+            throw createSectionNotPresentException(key);
         }
     }
 
@@ -103,7 +108,7 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
      * Add an item at the specified position of the specified section; If the specified
      * section does not exist, a log report would be sent to server when it is permitted.
      * <p>
-     * Use the {@link BaseListAdapter#containSection(K)} method to know whether
+     * Use the {@link BaseListAdapter#hasSection(K)} method to know whether
      * the section exist or not
      *
      * @param key      Key of the section the provided item be added to
@@ -112,20 +117,19 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
      * @param item     The item to be added
      * @throws NullPointerException When specified section is not present
      */
-    public void addItem(K key, int position, BaseItem item) {
+    public void addItem(K key, int position, I item) {
         V section = mSectionMap.get(key);
         if (section != null) {
             section.addItem(position, item);
 
             notifyItemInserted(getSectionStartPosition(key) + position + (section.hasHeader() ? 1 : 0));
         } else {
-            throw generateSectionNotPresentException(key);
+            throw createSectionNotPresentException(key);
         }
     }
 
-    protected void replaceItemSilent(V section, int position, BaseItem itemToReplaceWith) {
-        section.removeItem(position);
-        section.addItem(position, itemToReplaceWith);
+    protected void replaceItemSilent(@NonNull V section, int position, I itemToReplaceWith) {
+        section.replaceItem(position, itemToReplaceWith);
     }
 
     /**
@@ -137,9 +141,9 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
      * @return Whether the item was successfully replaced or not
      * @throws NullPointerException When specified section is not present
      */
-    public boolean replaceItem(K sectionKey, BaseItem itemToReplace, BaseItem itemToReplaceWith) {
+    public boolean replaceItem(K sectionKey, I itemToReplace, I itemToReplaceWith) {
         V section = mSectionMap.get(sectionKey);
-        if (section == null) throw generateSectionNotPresentException(sectionKey);
+        if (section == null) throw createSectionNotPresentException(sectionKey);
 
         int startPos = getSectionStartPosition(sectionKey);
         int itemCount = section.getItemCount();
@@ -164,9 +168,9 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
      * @param itemToReplaceWith The item which will replace the other
      * @throws NullPointerException When specified section is not present
      */
-    public void replaceItem(K sectionKey, int position, BaseItem itemToReplaceWith) {
+    public void replaceItem(K sectionKey, int position, I itemToReplaceWith) {
         V section = mSectionMap.get(sectionKey);
-        if (section == null) throw generateSectionNotPresentException(sectionKey);
+        if (section == null) throw createSectionNotPresentException(sectionKey);
 
         replaceItemSilent(section, position, itemToReplaceWith);
 
@@ -176,7 +180,7 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
         notifyItemChanged(itemPos);
     }
 
-    public void replaceAndMoveItem(K sectionKey, int oldPos, int newPos, BaseItem itemToReplaceWith) {
+    public void replaceAndMoveItem(K sectionKey, int oldPos, int newPos, I itemToReplaceWith) {
         V section = mSectionMap.get(sectionKey);
         if (section == null) return;
 
@@ -196,7 +200,7 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
         int containerPosition = 0;
         int evaluatingPos = 0;
 
-        for (Section section : mSectionMap.values()) {
+        for (V section : mSectionMap.values()) {
             evaluatingPos += section.getItemCount() + (section.hasHeader() ? 1 : 0);
 
             if (evaluatingPos > position) {
@@ -223,7 +227,7 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
 
     public void replaceSection(K sectionKey, V section) {
         V oldSection = mSectionMap.get(sectionKey);
-        if (oldSection == null) throw generateSectionNotPresentException(sectionKey);
+        if (oldSection == null) throw createSectionNotPresentException(sectionKey);
 
         boolean hadHeaderThen = oldSection.hasHeader();
         boolean hasHeaderNow = section.hasHeader();
@@ -257,7 +261,7 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
      */
     public boolean removeItemFromSection(K sectionKey, int positionAtSection) {
         V section = mSectionMap.get(sectionKey);
-        if (section == null) throw generateSectionNotPresentException(sectionKey);
+        if (section == null) throw createSectionNotPresentException(sectionKey);
 
         if (positionAtSection < section.getItemCount()) {
             section.removeItem(positionAtSection);
@@ -269,9 +273,9 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
         return false;
     }
 
-    public boolean removeItemFromSection(K sectionKey, BaseItem item) {
+    public boolean removeItemFromSection(K sectionKey, I item) {
         V section = mSectionMap.get(sectionKey);
-        if (section == null) throw generateSectionNotPresentException(sectionKey);
+        if (section == null) throw createSectionNotPresentException(sectionKey);
 
         int itemCount = section.getItemCount();
         for (int i = 0; i < itemCount; i++) {
@@ -287,7 +291,7 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
     }
 
     public boolean removeSection(K sectionKey) {
-        Section section = mSectionMap.get(sectionKey);
+        V section = mSectionMap.get(sectionKey);
         if (section == null) return false;
 
         int startPos = getSectionStartPosition(sectionKey);
@@ -307,8 +311,8 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
     }
 
     public void clearSectionItems(K sectionKey) {
-        Section section = mSectionMap.get(sectionKey);
-        if (section == null) throw generateSectionNotPresentException(sectionKey);
+        V section = mSectionMap.get(sectionKey);
+        if (section == null) throw createSectionNotPresentException(sectionKey);
 
         int startPos = getSectionStartPosition(sectionKey);
         int itemCount = section.getItemCount() + (section.hasHeader() ? 1 : 0);
@@ -332,22 +336,24 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
     }
 
     protected void reorderSectionsSilent() {
-        int size = mSectionMap.keySet().size();
+        int sectionCount = mSectionMap.keySet().size();
         ArrayList<K> keyArray = new ArrayList<>(mSectionMap.keySet());
         ArrayList<V> sectionArray = new ArrayList<>(mSectionMap.values());
 
         boolean isAlreadySorted = true;
-        int expectedOrdinal = 0;
-        for (int i = 0; i < size; i++) {
-            if (keyArray.get(i).ordinal() != expectedOrdinal) isAlreadySorted = false;
-            expectedOrdinal++;
+        for (int i = 0; i < sectionCount; i++) {
+            if (keyArray.get(i).ordinal() != i) {
+                isAlreadySorted = false;
+                break;
+            }
         }
 
         if (!isAlreadySorted) {
-            ArrayList<Integer> currentOrder = new ArrayList<>(size);
-            int[] sorted = new int[size];
+            ArrayList<Integer> currentOrder = new ArrayList<>(sectionCount);
+            int[] sorted = new int[sectionCount];
 
-            for (int i = 0; i < size; i++) {
+            //Caution: We may not have all the sections defined in the section enum
+            for (int i = 0; i < sectionCount; i++) {
                 int ordinal = keyArray.get(i).ordinal();
                 currentOrder.add(ordinal);
                 sorted[i] = ordinal;
@@ -355,16 +361,15 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
 
             Arrays.sort(sorted);
 
-            LinkedHashMap<K, V> sortedSectionMap = new LinkedHashMap<>();
+            mSectionMap.clear();
 
-            for (int i = 0; i < size; i++) {
+            for (int i = 0; i < sectionCount; i++) {
                 int oldIndex = currentOrder.indexOf(sorted[i]);
 
                 K key = keyArray.get(oldIndex);
-                sortedSectionMap.put(key, sectionArray.get(oldIndex));
+                mSectionMap.put(key, sectionArray.get(oldIndex));
             }
 
-            mSectionMap = sortedSectionMap;
         }
     }
 
@@ -372,12 +377,12 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
      * Specify whether the sections should be displayed as per their insertion order or
      * their enum key set ordinal
      *
-     * @param shouldRespect Specify whether to respect enum key set ordinal or not
+     * @param respectEnumOrder Specify whether to respect enum key set ordinal or not
      */
-    public void setRespectSectionOrder(boolean shouldRespect) {
-        mShouldRespectSectionOrder = shouldRespect;
+    public void setRespectSectionOrder(boolean respectEnumOrder) {
+        mShouldRespectSectionOrder = respectEnumOrder;
 
-        if (shouldRespect) {
+        if (respectEnumOrder) {
             reorderSectionsSilent();
             notifyDataSetChanged();
         }
@@ -389,7 +394,7 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
     @Override
     public int getItemCount() {
         int size = 0;
-        for (Section section : mSectionMap.values()) {
+        for (V section : mSectionMap.values()) {
             size += section.getItemCount() + (section.hasHeader() ? 1 : 0);
         }
 
@@ -401,7 +406,7 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
      */
     public int getListItemCount() {
         int count = 0;
-        for (Section section : mSectionMap.values()) {
+        for (V section : mSectionMap.values()) {
             count += section.getItemCount();
         }
 
@@ -413,9 +418,9 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
     }
 
     public int getSectionItemCount(K sectionKey) {
-        Section section = mSectionMap.get(sectionKey);
+        V section = mSectionMap.get(sectionKey);
 
-        if (section == null) throw generateSectionNotPresentException(sectionKey);
+        if (section == null) throw createSectionNotPresentException(sectionKey);
         else return section.getItemCount();
     }
 
@@ -430,19 +435,19 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section,
                 break;
             }
 
-            Section section = sections.next();
+            V section = sections.next();
             containerPos += section.getItemCount() + (section.hasHeader() ? 1 : 0);
         }
 
         if (sectionExists) return containerPos;
-        else throw generateSectionNotPresentException(sectionKey);
+        else throw createSectionNotPresentException(sectionKey);
     }
 
     protected LinkedHashMap<K, V> getSectionMap() {
         return mSectionMap;
     }
 
-    private NullPointerException generateSectionNotPresentException(K providedKey) {
+    private NullPointerException createSectionNotPresentException(K providedKey) {
         return new NullPointerException("Section not present; couldn't complete action (provided section key: " + providedKey +
                 "; present section keys: " + mSectionMap.keySet() + ")");
     }

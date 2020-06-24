@@ -5,7 +5,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class ButtonItem implements BaseItem {
+public class ButtonItem implements BaseButtonItem {
     @NonNull
     private String mTitle;
     @Nullable
@@ -17,7 +17,6 @@ public class ButtonItem implements BaseItem {
     }
 
     @NonNull
-    @Override
     public String getTitle() {
         return mTitle;
     }

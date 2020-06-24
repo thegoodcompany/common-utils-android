@@ -1,4 +1,4 @@
-package thegoodkid.common.utilsdemo.utils.list;
+package thegoodkid.common.utilsdemo.utilis.list;
 
 import android.util.Log;
 import android.view.View;
@@ -33,7 +33,6 @@ public class Item implements BaseItem {
     }
 
     @NonNull
-    @Override
     public String getTitle() {
         return mTitle;
     }
