@@ -11,16 +11,33 @@
     <string name="remove_section">Remove Section</string>
     <string name="action">Action</string>
     <string name="reset">Start Over</string>
+    <string name="range_from">Select Start Range</string>
+    <string name="range_to">Select End Range</string>
 
     <!--headings-->
-    <string name="heading_imm">Input Manager</string>
-    <string name="heading_number_extraction">Number Extraction</string>
+    <string name="headline_imm">Input Manager</string>
+    <string name="headline_number_extraction">Number Extraction</string>
+    <string name="headline_days_interval">Days Interval</string>
+
+    <!--titles-->
+    <string name="mode_year_month_day">Year, Month, Day:</string>
+    <string name="mode_year_day">Year, Day:</string>
+    <string name="mode_month_day">Month, Day:</string>
+    <string name="mode_day">Day:</string>
+    <string name="mode_hour">Hour:</string>
+    <string name="mode_minute">Minute:</string>
+    <string name="mode_second">Second:</string>
 
     <!--messages-->
     <string name="section_full">Available sections are already created.</string>
     <string name="result_string_with_number">Extracted Number will be Showed Here</string>
     <string name="on_list_item_click">Item clicked</string>
+    <string name="result_days_interval">No range selected</string>
 
     <!--hints-->
     <string name="hint_string_with_number">May or may not contain number</string>
+
+    <!--description-->
+    <string name="divider">Divider</string>
+    <string name="set">Set</string>
 </resources>

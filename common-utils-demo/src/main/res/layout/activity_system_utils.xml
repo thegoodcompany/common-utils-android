@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/default_layout_margin"
         android:layout_marginTop="@dimen/default_view_margin"
-        android:text="@string/heading_imm"
+        android:text="@string/headline_imm"
         android:textAppearance="@style/TextAppearance.FluentUI.Headline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/app_bar" />

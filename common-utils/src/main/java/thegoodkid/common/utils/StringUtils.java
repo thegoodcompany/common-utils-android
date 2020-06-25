@@ -21,17 +21,19 @@ public class StringUtils {
         StringBuilder joined = new StringBuilder();
         int total = values.length;
 
+        boolean useSeparator = false;
         for (int i = 0; i < total; ) {
             if (values[i] == unless) {
                 i++;
                 continue;
             }
 
+            if (useSeparator) joined.append(separator);
+            else useSeparator = true;
+
             joined.append(values[i]).append(appendants[i]);
 
             if (++i == total) break;
-
-            joined.append(separator);
         }
 
         return joined.toString();
@@ -56,17 +58,19 @@ public class StringUtils {
         StringBuilder joined = new StringBuilder();
         int total = values.length;
 
+        boolean useSeparator = false;
         for (int i = 0; i < total; ) {
             if (values[i] == unless) {
                 i++;
                 continue;
             }
 
+            if (useSeparator) joined.append(separator);
+            else useSeparator = true;
+
             joined.append(values[i]).append(res.getQuantityString(pluralAppendants[i], values[i]));
 
             if (++i == total) break;
-
-            joined.append(separator);
         }
 
         return joined.toString();
@@ -77,17 +81,19 @@ public class StringUtils {
         StringBuilder joined = new StringBuilder();
         int total = values.length;
 
+        boolean useSeparator = false;
         for (int i = 0; i < total; ) {
             if (values[i] == unless) {
                 i++;
                 continue;
             }
 
+            if (useSeparator) joined.append(separator);
+            else useSeparator = true;
+
             joined.append(values[i]).append(appendants[i]);
 
             if (++i == total) break;
-
-            joined.append(separator);
         }
 
         return joined.toString();
@@ -98,11 +104,15 @@ public class StringUtils {
         StringBuilder joined = new StringBuilder();
         int total = values.length;
 
+        boolean useSeparator = false;
         for (int i = 0; i < total; ) {
             if (values[i] == unless) {
                 i++;
                 continue;
             }
+
+            if (useSeparator) joined.append(separator);
+            else useSeparator = true;
 
             int quantity;
             if (values[i] > Integer.MAX_VALUE) quantity = Integer.MAX_VALUE;
@@ -113,8 +123,6 @@ public class StringUtils {
                     (quantity)));
 
             if (++i == total) break;
-
-            joined.append(separator);
         }
 
         return joined.toString();
@@ -125,17 +133,19 @@ public class StringUtils {
         StringBuilder joined = new StringBuilder();
         int total = values.length;
 
+        boolean useSeparator = false;
         for (int i = 0; i < total; ) {
             if (values[i] == unless) {
                 i++;
                 continue;
             }
 
+            if (useSeparator) joined.append(separator);
+            else useSeparator = true;
+
             joined.append(values[i]).append(appendants[i]);
 
             if (++i == total) break;
-
-            joined.append(separator);
         }
 
         return joined.toString();
