@@ -1,6 +1,7 @@
 package thegoodkid.common.utils.recyclerview;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -180,9 +181,41 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
         notifyItemChanged(itemPos);
     }
 
-    public void replaceAndMoveItem(K sectionKey, int oldPos, int newPos, I itemToReplaceWith) {
+    public boolean moveItemInSection(K sectionKey, int oldPos, int newPos) {
         V section = mSectionMap.get(sectionKey);
-        if (section == null) return;
+        if (section == null) return false;
+
+        int startPos = getSectionStartPosition(sectionKey) + (section.hasHeader() ? 1 : 0);
+        int itemPosThen = startPos + oldPos;
+        int itemPosNow = startPos + newPos;
+
+        section.moveItem(oldPos, newPos);
+        notifyItemMoved(itemPosThen, itemPosNow);
+        return true;
+    }
+
+    public boolean moveItem(I item, K destSectionKey, int newPosAtSection) {
+        V destSection = mSectionMap.get(destSectionKey);
+        V sourceSection = getItemSection(item);
+        if (destSection == null || sourceSection == null) return false;
+        if (destSection == sourceSection)
+            return moveItemInSection(destSectionKey, sourceSection.getItemIndex(item), newPosAtSection);
+
+        int posThen = getItemPosition(item);
+
+        sourceSection.removeItem(item);
+        destSection.addItem(newPosAtSection, item);
+
+        int startPos = getSectionStartPosition(destSectionKey) + (destSection.hasHeader() ? 1 : 0);
+        int posNow = startPos + newPosAtSection;
+
+        notifyItemMoved(posThen, posNow);
+        return true;
+    }
+
+    public boolean replaceAndMoveItem(K sectionKey, int oldPos, int newPos, I itemToReplaceWith) {
+        V section = mSectionMap.get(sectionKey);
+        if (section == null) return false;
 
         replaceItemSilent(section, oldPos, itemToReplaceWith);
 
@@ -194,6 +227,8 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
 
         notifyItemChanged(itemPosThen);
         notifyItemMoved(itemPosThen, itemPosNow);
+
+        return true;
     }
 
     protected BaseItem getItem(int position) {
@@ -251,6 +286,32 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
             notifyItemRangeRemoved(startPos + sectionItemCountNow, sectionItemCountThen - sectionItemCountNow);
     }
 
+    public boolean removeItem(I item) {
+        V itemSection = getItemSection(item);
+        if (itemSection == null) return false;
+
+        int pos = getItemPosition(item);
+        if (itemSection.removeItem(item)) {
+            notifyItemRemoved(pos);
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean removeSection(K sectionKey) {
+        V section = mSectionMap.get(sectionKey);
+        if (section == null) return false;
+
+        int startPos = getSectionStartPosition(sectionKey);
+        int itemCount = getSectionItemCount(sectionKey) + (section.hasHeader() ? 1 : 0);
+
+        mSectionMap.remove(sectionKey);
+
+        notifyItemRangeRemoved(startPos, itemCount);
+        return true;
+    }
+
     /**
      * Removes item at {@code positionAtSection} position from specified section.
      *
@@ -290,19 +351,6 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
         return false;
     }
 
-    public boolean removeSection(K sectionKey) {
-        V section = mSectionMap.get(sectionKey);
-        if (section == null) return false;
-
-        int startPos = getSectionStartPosition(sectionKey);
-        int itemCount = getSectionItemCount(sectionKey) + (section.hasHeader() ? 1 : 0);
-
-        mSectionMap.remove(sectionKey);
-
-        notifyItemRangeRemoved(startPos, itemCount);
-        return true;
-    }
-
     public void clear() {
         int itemCount = getItemCount();
 
@@ -320,6 +368,89 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
         section.clearItems();
 
         notifyItemRangeRemoved(startPos, itemCount);
+    }
+
+    /**
+     * @return Total items including headers
+     */
+    @Override
+    public int getItemCount() {
+        int size = 0;
+        for (V section : mSectionMap.values()) {
+            size += section.getItemCount() + (section.hasHeader() ? 1 : 0);
+        }
+
+        return size;
+    }
+
+    /**
+     * @return Total items excluding headers but including other view types e.g button
+     */
+    public int getListItemCount() {
+        int count = 0;
+        for (V section : mSectionMap.values()) {
+            count += section.getItemCount();
+        }
+
+        return count;
+    }
+
+    public int getSectionCount() {
+        return mSectionMap.size();
+    }
+
+    public int getSectionItemCount(K sectionKey) {
+        V section = mSectionMap.get(sectionKey);
+
+        if (section == null) throw createSectionNotPresentException(sectionKey);
+        else return section.getItemCount();
+    }
+
+    protected int getSectionStartPosition(K sectionKey) {
+        int containerPos = 0;
+        Iterator<V> sections = mSectionMap.values().iterator();
+
+        boolean sectionExists = false;
+        for (K key : mSectionMap.keySet()) {
+            if (key == sectionKey) {
+                sectionExists = true;
+                break;
+            }
+
+            V section = sections.next();
+            containerPos += section.getItemCount() + (section.hasHeader() ? 1 : 0);
+        }
+
+        if (sectionExists) return containerPos;
+        else throw createSectionNotPresentException(sectionKey);
+    }
+
+    @Nullable
+    protected V getItemSection(I item) {
+        for (V section : mSectionMap.values()) {
+            if (section.hasItem(item)) return section;
+        }
+
+        return null;
+    }
+
+    protected int getItemPosition(I item) {
+        int pos = 0;
+        for (V section : mSectionMap.values()) {
+            if (section.hasHeader()) pos++;
+
+            int sectionProfileCount = section.getItemCount();
+            for (int i = 0; i < sectionProfileCount; i++) {
+                if (section.getItem(i).equals(item)) return pos;
+                pos++;
+            }
+        }
+
+        return -1;
+    }
+
+    protected LinkedHashMap<K, V> getSectionMap() {
+        return mSectionMap;
     }
 
     /**
@@ -388,68 +519,9 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
         }
     }
 
-    /**
-     * @return Total items including headers
-     */
-    @Override
-    public int getItemCount() {
-        int size = 0;
-        for (V section : mSectionMap.values()) {
-            size += section.getItemCount() + (section.hasHeader() ? 1 : 0);
-        }
-
-        return size;
-    }
-
-    /**
-     * @return Total items excluding headers but including other view types e.g button
-     */
-    public int getListItemCount() {
-        int count = 0;
-        for (V section : mSectionMap.values()) {
-            count += section.getItemCount();
-        }
-
-        return count;
-    }
-
-    public int getSectionCount() {
-        return mSectionMap.size();
-    }
-
-    public int getSectionItemCount(K sectionKey) {
-        V section = mSectionMap.get(sectionKey);
-
-        if (section == null) throw createSectionNotPresentException(sectionKey);
-        else return section.getItemCount();
-    }
-
-    protected int getSectionStartPosition(K sectionKey) {
-        int containerPos = 0;
-        Iterator<V> sections = mSectionMap.values().iterator();
-
-        boolean sectionExists = false;
-        for (K key : mSectionMap.keySet()) {
-            if (key == sectionKey) {
-                sectionExists = true;
-                break;
-            }
-
-            V section = sections.next();
-            containerPos += section.getItemCount() + (section.hasHeader() ? 1 : 0);
-        }
-
-        if (sectionExists) return containerPos;
-        else throw createSectionNotPresentException(sectionKey);
-    }
-
-    protected LinkedHashMap<K, V> getSectionMap() {
-        return mSectionMap;
-    }
-
     private NullPointerException createSectionNotPresentException(K providedKey) {
-        return new NullPointerException("Section not present; couldn't complete action (provided section key: " + providedKey +
-                "; present section keys: " + mSectionMap.keySet() + ")");
+        return new NullPointerException("Section not present; couldn't complete action (provided section: " + providedKey +
+                "; available sections: " + mSectionMap.keySet() + ")");
     }
 
     /**

@@ -10,7 +10,10 @@ public class Item implements BaseItem {
     @Nullable private String mSubtitle;
     @Nullable private String mFooter;
     @Nullable private View mCustomView;
-    @Nullable private View.OnClickListener mOnClickListener;
+    @Nullable
+    private View.OnClickListener mOnClickListener;
+    @Nullable
+    private View mAccessoryView;
 
     public Item(@NonNull String title) {
         this.mTitle = title;

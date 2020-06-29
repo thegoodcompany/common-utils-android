@@ -11,9 +11,14 @@ public class HeaderItem implements BaseHeaderItem {
     @Nullable
     private View mAccessoryView;
 
-    public HeaderItem(@NonNull String title, @Nullable View accessoryView) {
+    public HeaderItem(@NonNull String title) {
         mTitle = title;
+    }
+
+    public HeaderItem setAccessoryView(View accessoryView) {
         mAccessoryView = accessoryView;
+
+        return this;
     }
 
     @NonNull

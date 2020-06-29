@@ -16,7 +16,6 @@ public class CalendarUtilsTest {
         assertThat(test1[DAY]).isEqualTo(3);
     }
 
-
     @Test
     public void dateIntervals_isCorrect() {
         long[] test1 = CalendarUtils.calculateIntervals(2020, 5, 22, 2020, 5, 25, MODE_YEAR_MONTH_DAY);
@@ -100,5 +99,12 @@ public class CalendarUtilsTest {
 
         assertThat(CalendarUtils.calculateLeapDays(2007, 1, 29, 2020, 5, 25))
                 .isEqualTo(4);
+    }
+
+    @Test
+    public void dateIsBefore_isCorrect() {
+        assertThat(CalendarUtils.isBefore(7, 2, 8, 2)).isTrue();
+        assertThat(CalendarUtils.isBefore(8, 2, 8, 2)).isFalse();
+        assertThat(CalendarUtils.isBefore(9, 2, 8, 2)).isFalse();
     }
 }

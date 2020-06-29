@@ -82,12 +82,12 @@ public class CalendarUtilsActivity extends AppCompatActivity implements DateTime
         this.duration = duration;
 
         int startDay = zonedDateTime.getDayOfMonth();
-        int startMonth = zonedDateTime.getMonthValue();
+        int startMonth = zonedDateTime.getMonthValue() - 1;
         int startYear = zonedDateTime.getYear();
 
         ZonedDateTime endDate = zonedDateTime.plus(duration);
         int endDay = endDate.getDayOfMonth();
-        int endMonth = endDate.getMonthValue();
+        int endMonth = endDate.getMonthValue() - 1;
         int endYear = endDate.getYear();
 
         long[] ymdRes = CalendarUtils.calculateIntervals(startYear, startMonth, startDay, endYear, endMonth, endDay, CalendarUtils.MODE_YEAR_MONTH_DAY);

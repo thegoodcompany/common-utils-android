@@ -33,6 +33,10 @@ public class Section<H extends BaseHeaderItem, I extends BaseItem> {
         mItems.add(index, item);
     }
 
+    protected void moveItem(int oldIndex, int newIndex) {
+        mItems.add(newIndex, mItems.remove(oldIndex));
+    }
+
     protected void replaceItem(int index, I itemToReplaceWith) {
         mItems.set(index, itemToReplaceWith);
     }
@@ -41,8 +45,16 @@ public class Section<H extends BaseHeaderItem, I extends BaseItem> {
         return mItems.remove(index);
     }
 
+    protected boolean removeItem(I item) {
+        return mItems.remove(item);
+    }
+
     public I getItem(int index) {
         return mItems.get(index);
+    }
+
+    public int getItemIndex(I item) {
+        return mItems.indexOf(item);
     }
 
     public int getItemCount() {
@@ -51,6 +63,10 @@ public class Section<H extends BaseHeaderItem, I extends BaseItem> {
 
     public boolean hasHeader() {
         return mHasHeader;
+    }
+
+    public boolean hasItem(I item) {
+        return mItems.contains(item);
     }
 
     protected void clearItems() {

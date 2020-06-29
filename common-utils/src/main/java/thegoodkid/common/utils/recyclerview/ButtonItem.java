@@ -11,9 +11,14 @@ public class ButtonItem implements BaseButtonItem {
     @Nullable
     private Button.OnClickListener mOnClickListener;
 
-    public ButtonItem(@NonNull String title, @Nullable Button.OnClickListener onClickListener) {
+    public ButtonItem(@NonNull String title) {
         mTitle = title;
-        mOnClickListener = onClickListener;
+    }
+
+    public ButtonItem setOnClickListener(Button.OnClickListener listener) {
+        mOnClickListener = listener;
+
+        return this;
     }
 
     @NonNull

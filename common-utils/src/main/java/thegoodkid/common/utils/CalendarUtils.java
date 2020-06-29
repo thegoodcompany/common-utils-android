@@ -36,6 +36,8 @@ public class CalendarUtils {
     /**
      * Calculates the difference between two dates.
      * {@code returnMode} defines how and which fields should be calculated
+     * <p>
+     * Note: The first month of the year, January, is 0
      */
     @NonNull
     public static long[] calculateIntervals(int year1, int month1, int day1, int year2, int month2, int day2, int returnMode) {
@@ -177,6 +179,14 @@ public class CalendarUtils {
         return leapDays;
     }
 
+    public static boolean isBefore(int subjectDay, int subjectMonth, int destinationDay, int destinationMonth) {
+        return subjectMonth < destinationMonth || (subjectMonth == destinationMonth && subjectDay < destinationDay);
+    }
+
+    public static int getFieldsCount() {
+        return ELEMENTS;
+    }
+
     public enum Month {
         JANUARY(31),
         FEBRUARY(28),
@@ -197,7 +207,7 @@ public class CalendarUtils {
             mNumberOfDays = numberOfDays;
         }
 
-        public int getNumberOfDays() {
+        private int getNumberOfDays() {
             return mNumberOfDays;
         }
     }

@@ -126,7 +126,7 @@ public class ListItemActivity extends AppCompatActivity {
 
     @NotNull
     private Section<HeaderItem, Item> createSection(@NotNull SectionIdentifier identifier) {
-        HeaderItem headerItem = new HeaderItem(identifier.title, createSectionAccessoryView(identifier));
+        HeaderItem headerItem = new HeaderItem(identifier.title).setAccessoryView(createSectionAccessoryView(identifier));
         ArrayList<Item> items = new ArrayList<>();
 
         for (int i = 0; i < DEFAULT_SECTION_ITEM_COUNT; i++) {
