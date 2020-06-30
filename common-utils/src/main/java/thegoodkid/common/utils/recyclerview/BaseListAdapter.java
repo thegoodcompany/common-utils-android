@@ -254,10 +254,11 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
 
     public void addSection(K sectionKey, V section) {
         mSectionMap.put(sectionKey, section);
-
         if (mShouldRespectSectionOrder) reorderSectionsSilent();
 
-        notifyItemRangeInserted(getSectionStartPosition(sectionKey), section.getItemCount());
+        int startPos = getSectionStartPosition(sectionKey);
+        int itemCount = section.getItemCount() + (section.hasHeader() ? 1 : 0);
+        notifyItemRangeInserted(startPos, itemCount);
     }
 
     public void replaceSection(K sectionKey, V section) {
@@ -304,7 +305,7 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
         if (section == null) return false;
 
         int startPos = getSectionStartPosition(sectionKey);
-        int itemCount = getSectionItemCount(sectionKey) + (section.hasHeader() ? 1 : 0);
+        int itemCount = section.getItemCount() + (section.hasHeader() ? 1 : 0);
 
         mSectionMap.remove(sectionKey);
 
@@ -434,6 +435,19 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
         return null;
     }
 
+    @Nullable
+    protected K getItemSectionKey(I item) {
+        ArrayList<K> keys = new ArrayList<>(mSectionMap.keySet());
+        ArrayList<V> values = new ArrayList<>(mSectionMap.values());
+
+        int size = keys.size();
+        for (int i = 0; i < size; i++) {
+            if (values.get(i).hasItem(item)) return keys.get(i);
+        }
+
+        return null;
+    }
+
     protected int getItemPosition(I item) {
         int pos = 0;
         for (V section : mSectionMap.values()) {
@@ -471,15 +485,15 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
         ArrayList<K> keyArray = new ArrayList<>(mSectionMap.keySet());
         ArrayList<V> sectionArray = new ArrayList<>(mSectionMap.values());
 
-        boolean isAlreadySorted = true;
+        boolean isSorted = true;
         for (int i = 0; i < sectionCount; i++) {
             if (keyArray.get(i).ordinal() != i) {
-                isAlreadySorted = false;
+                isSorted = false;
                 break;
             }
         }
 
-        if (!isAlreadySorted) {
+        if (!isSorted) {
             ArrayList<Integer> currentOrder = new ArrayList<>(sectionCount);
             int[] sorted = new int[sectionCount];
 
@@ -517,6 +531,10 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
             reorderSectionsSilent();
             notifyDataSetChanged();
         }
+    }
+
+    public boolean isRespectingSectionOrder() {
+        return mShouldRespectSectionOrder;
     }
 
     private NullPointerException createSectionNotPresentException(K providedKey) {
