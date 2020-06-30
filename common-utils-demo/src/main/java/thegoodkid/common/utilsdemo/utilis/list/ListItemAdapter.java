@@ -1,4 +1,4 @@
-package thegoodkid.common.utilsdemo.utils.list;
+package thegoodkid.common.utilsdemo.utilis.list;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -25,11 +25,11 @@ import thegoodkid.common.utils.recyclerview.Section;
 import thegoodkid.common.utilsdemo.R;
 import thegoodkid.common.utilsdemo.databinding.ViewButtonBinding;
 
-public class ListItemAdapter<K extends Enum<K>> extends BaseListAdapter<K, Section, RecyclerView.ViewHolder> {
+public class ListItemAdapter<K extends Enum<K>> extends BaseListAdapter<K, Section<HeaderItem, Item>, HeaderItem, Item, RecyclerView.ViewHolder> {
     @NonNull
     private Context mContext;
 
-    public ListItemAdapter(@NonNull Context context, LinkedHashMap<K, Section> sectionMap) {
+    public ListItemAdapter(@NonNull Context context, LinkedHashMap<K, Section<HeaderItem, Item>> sectionMap) {
         super(sectionMap);
 
         mContext = context;
@@ -91,7 +91,7 @@ public class ListItemAdapter<K extends Enum<K>> extends BaseListAdapter<K, Secti
             ButtonViewHolder itemHolder = (ButtonViewHolder) holder;
             ButtonItem buttonItem = (ButtonItem) baseItem;
 
-            itemHolder.mButton.setText(baseItem.getTitle());
+            itemHolder.mButton.setText(buttonItem.getTitle());
             itemHolder.mButton.setOnClickListener(buttonItem.getOnClickListener());
         }
 

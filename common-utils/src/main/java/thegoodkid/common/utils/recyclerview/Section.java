@@ -1,14 +1,17 @@
 package thegoodkid.common.utils.recyclerview;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
 
-public class Section {
-    private HeaderItem mHeader;
-    private ArrayList<BaseItem> mItems;
+public class Section<H extends BaseHeaderItem, I extends BaseItem> {
+    @Nullable private H mHeader;
+    @NonNull private ArrayList<I> mItems;
 
     private boolean mHasHeader;
 
-    public Section(HeaderItem sectionHeader, ArrayList<BaseItem> items) {
+    public Section(@Nullable H sectionHeader, @NonNull ArrayList<I> items) {
         if (sectionHeader != null) {
             mHeader = sectionHeader;
             mHasHeader = true;
@@ -17,24 +20,41 @@ public class Section {
         mItems = items;
     }
 
-    HeaderItem getSectionHeader() {
+    @Nullable
+    public H getSectionHeader() {
         return mHeader;
     }
 
-    void addItem(BaseItem item) {
+    protected void addItem(I item) {
         mItems.add(item);
     }
 
-    void addItem(int index, BaseItem item) {
+    protected void addItem(int index, I item) {
         mItems.add(index, item);
     }
 
-    protected BaseItem removeItem(int index) {
+    protected void moveItem(int oldIndex, int newIndex) {
+        mItems.add(newIndex, mItems.remove(oldIndex));
+    }
+
+    protected void replaceItem(int index, I itemToReplaceWith) {
+        mItems.set(index, itemToReplaceWith);
+    }
+
+    protected I removeItem(int index) {
         return mItems.remove(index);
     }
 
-    public BaseItem getItem(int index) {
+    protected boolean removeItem(I item) {
+        return mItems.remove(item);
+    }
+
+    public I getItem(int index) {
         return mItems.get(index);
+    }
+
+    public int getItemIndex(I item) {
+        return mItems.indexOf(item);
     }
 
     public int getItemCount() {
@@ -45,7 +65,11 @@ public class Section {
         return mHasHeader;
     }
 
-    public void clearItems() {
+    public boolean hasItem(I item) {
+        return mItems.contains(item);
+    }
+
+    protected void clearItems() {
         mItems.clear();
     }
 }

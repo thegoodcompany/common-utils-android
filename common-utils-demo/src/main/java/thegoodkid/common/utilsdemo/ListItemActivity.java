@@ -22,19 +22,17 @@ import com.microsoft.fluentui.util.ThemeUtil;
 import com.microsoft.fluentui.util.ThemeUtilsKt;
 import com.microsoft.fluentui.util.ViewUtilsKt;
 
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import thegoodkid.common.utils.recyclerview.BaseItem;
 import thegoodkid.common.utils.recyclerview.HeaderItem;
 import thegoodkid.common.utils.recyclerview.Section;
 import thegoodkid.common.utilsdemo.databinding.ActivityListItemBinding;
 import thegoodkid.common.utilsdemo.utilis.ViewUtils;
-import thegoodkid.common.utilsdemo.utils.list.Item;
-import thegoodkid.common.utilsdemo.utils.list.ListItemAdapter;
+import thegoodkid.common.utilsdemo.utilis.list.Item;
+import thegoodkid.common.utilsdemo.utilis.list.ListItemAdapter;
 
 public class ListItemActivity extends AppCompatActivity {
     private static final int DEFAULT_SECTION_ITEM_COUNT = 4;
@@ -75,7 +73,7 @@ public class ListItemActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_add_section) {
             for (SectionIdentifier identifier : SectionIdentifier.values()) {
-                if (!adapter.containSection(identifier)) {
+                if (!adapter.hasSection(identifier)) {
                     adapter.addSection(identifier, createSection(identifier));
                     binding.listContainer.smoothScrollToPosition(adapter.getItemCount() - 1);
                     return true;
@@ -95,7 +93,7 @@ public class ListItemActivity extends AppCompatActivity {
     }
 
     private void init() {
-        LinkedHashMap<SectionIdentifier, Section> sectionMap = createSectionMap();
+        LinkedHashMap<SectionIdentifier, Section<HeaderItem, Item>> sectionMap = createSectionMap();
         adapter = new ListItemAdapter<>(this, sectionMap);
 
         binding.listContainer.addItemDecoration(new ListItemDivider(this, DividerItemDecoration.VERTICAL));
@@ -103,8 +101,8 @@ public class ListItemActivity extends AppCompatActivity {
     }
 
     @NotNull
-    private LinkedHashMap<SectionIdentifier, Section> createSectionMap() {
-        LinkedHashMap<SectionIdentifier, Section> sectionMap = new LinkedHashMap<>();
+    private LinkedHashMap<SectionIdentifier, Section<HeaderItem, Item>> createSectionMap() {
+        LinkedHashMap<SectionIdentifier, Section<HeaderItem, Item>> sectionMap = new LinkedHashMap<>();
 
         SectionIdentifier[] identifiers = SectionIdentifier.values();
         for (int i = 0; i < PRIMARY_SECTION_COUNT; i++) {
@@ -127,10 +125,9 @@ public class ListItemActivity extends AppCompatActivity {
     }
 
     @NotNull
-    @Contract("_ -> new")
-    private Section createSection(@NotNull SectionIdentifier identifier) {
-        HeaderItem headerItem = new HeaderItem(identifier.title, createSectionAccessoryView(identifier));
-        ArrayList<BaseItem> items = new ArrayList<>();
+    private Section<HeaderItem, Item> createSection(@NotNull SectionIdentifier identifier) {
+        HeaderItem headerItem = new HeaderItem(identifier.title).setAccessoryView(createSectionAccessoryView(identifier));
+        ArrayList<Item> items = new ArrayList<>();
 
         for (int i = 0; i < DEFAULT_SECTION_ITEM_COUNT; i++) {
             Item item = createItem();
@@ -139,7 +136,7 @@ public class ListItemActivity extends AppCompatActivity {
             items.add(item);
         }
 
-        return new Section(headerItem, items);
+        return new Section<>(headerItem, items);
     }
 
     @NotNull

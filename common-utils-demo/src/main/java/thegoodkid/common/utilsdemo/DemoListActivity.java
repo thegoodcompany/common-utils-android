@@ -37,9 +37,10 @@ public class DemoListActivity extends AppCompatActivity {
     }
 
     protected enum Demos {
+        LIST_ITEM("List Item", ListItemActivity.class),
         NUMBER_UTILS("Number Utils", NumberUtilsActivity.class),
         SYSTEM_UTILS("System Utils", SystemUtilsActivity.class),
-        LIST_ITEM("List Item", ListItemActivity.class);
+        CALENDAR_UTILS("Calendar Utils", CalendarUtilsActivity.class);
 
         protected final String title;
         protected final Class<? extends AppCompatActivity> activityClass;

@@ -25,4 +25,12 @@
         <item name="android:textColor">?attr/fluentuiForegroundSecondaryColor</item>
     </style>
 
+    <style name="TextAppearance.AppTheme.ListItemAccessoryValue" parent="TextAppearance.FluentUI.SubHeading1">
+        <item name="android:textColor">?attr/fluentuiForegroundSecondaryColor</item>
+    </style>
+
+    <style name="TextAppearance.AppTheme.Result" parent="TextAppearance.FluentUI.Body2" />
+
+    <style name="TextAppearance.AppTheme.Result.Label" parent="TextAppearance.FluentUI.Body1" />
+
 </resources>

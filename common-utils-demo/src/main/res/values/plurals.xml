@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="year">
+        <item quantity="one">\u0020Year</item>
+        <item quantity="other">\u0020Years</item>
+    </plurals>
+
+    <plurals name="month">
+        <item quantity="one">\u0020Month</item>
+        <item quantity="other">\u0020Months</item>
+    </plurals>
+
+    <plurals name="day">
+        <item quantity="one">\u0020Day</item>
+        <item quantity="other">\u0020Days</item>
+    </plurals>
+
+    <plurals name="hour">
+        <item quantity="one">\u0020Hour</item>
+        <item quantity="other">\u0020Hours</item>
+    </plurals>
+
+    <plurals name="minute">
+        <item quantity="one">\u0020Minute</item>
+        <item quantity="other">\u0020Minutes</item>
+    </plurals>
+
+    <plurals name="second">
+        <item quantity="one">\u0020Second</item>
+        <item quantity="other">\u0020Seconds</item>
+    </plurals>
+
+</resources>
