@@ -3,15 +3,17 @@ package thegoodkid.common.utils.recyclerview;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Section<H extends BaseHeaderItem, I extends BaseItem> {
-    @Nullable private H mHeader;
-    @NonNull private ArrayList<I> mItems;
+    @Nullable
+    private H mHeader;
+    @NonNull
+    private List<I> mItems;
 
     private boolean mHasHeader;
 
-    public Section(@Nullable H sectionHeader, @NonNull ArrayList<I> items) {
+    public Section(@Nullable H sectionHeader, @NonNull List<I> items) {
         if (sectionHeader != null) {
             mHeader = sectionHeader;
             mHasHeader = true;
@@ -31,6 +33,10 @@ public class Section<H extends BaseHeaderItem, I extends BaseItem> {
 
     protected void addItem(int index, I item) {
         mItems.add(index, item);
+    }
+
+    protected void addItems(List<I> items) {
+        mItems.addAll(items);
     }
 
     protected void moveItem(int oldIndex, int newIndex) {

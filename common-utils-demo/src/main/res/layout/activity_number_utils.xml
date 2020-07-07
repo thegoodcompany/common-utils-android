@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,8 +10,7 @@
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_alignParentTop="true" />
 
     <TextView
         android:id="@+id/number_extraction_headline"
@@ -19,44 +18,81 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/default_layout_margin"
         android:layout_marginTop="@dimen/default_view_margin"
+        android:layout_below="@id/app_bar"
+        android:layout_marginBottom="@dimen/fluentui_content_inset"
         android:text="@string/headline_number_extraction"
-        android:textAppearance="@style/TextAppearance.FluentUI.Headline"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_bar" />
+        android:textAppearance="@style/TextAppearance.FluentUI.Headline" />
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/view"
+        android:id="@+id/extraction_header_divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/fluentui_divider_height"
-        android:layout_marginTop="@dimen/fluentui_content_inset"
-        android:background="@drawable/ms_row_divider"
-        app:layout_constraintStart_toStartOf="@+id/number_extraction_headline"
-        app:layout_constraintTop_toBottomOf="@+id/number_extraction_headline" />
+        android:layout_below="@id/number_extraction_headline"
+        android:background="@drawable/ms_row_divider" />
 
-    <TextView
-        android:id="@+id/extracted_number_text_view"
-        android:layout_width="wrap_content"
+    <com.microsoft.fluentui.listitem.ListItemView
+        android:id="@+id/number_extraction_result"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_view_margin"
-        android:text="@string/result_string_with_number"
-        android:textAppearance="@style/TextAppearance.FluentUI.SubHeading1"
-        app:layout_constraintStart_toStartOf="@+id/number_extraction_headline"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        android:layout_below="@id/extraction_header_divider"
+        app:title="@string/result_number_extraction"
+        app:titleMaxLines="4"
+        app:titleTruncateAt="end" />
 
     <EditText
-        android:id="@+id/extraction_number_edit_text"
+        android:id="@+id/number_extraction_edit_text"
         style="@style/Widget.AppTheme.EditText"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_view_margin"
+        android:layout_below="@id/number_extraction_result"
+        android:layout_marginStart="@dimen/default_layout_margin"
         android:layout_marginEnd="@dimen/default_layout_margin"
+        android:layout_marginBottom="@dimen/default_view_margin"
         android:ems="10"
-        android:hint="@string/hint_string_with_number"
+        android:hint="@string/hint_number_extraction"
         android:importantForAutofill="no"
-        android:inputType="textPersonName|text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/extracted_number_text_view"
-        app:layout_constraintTop_toBottomOf="@+id/extracted_number_text_view"
-        tools:ignore="TextFields" />
+        android:inputType="textPersonName|text" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/to_word_converter_headline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/number_extraction_edit_text"
+        android:layout_alignStart="@id/number_extraction_headline"
+        android:layout_marginBottom="@dimen/fluentui_content_inset"
+        android:text="@string/headline_word_conversion"
+        android:textAppearance="@style/TextAppearance.FluentUI.Headline" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/to_word_header_divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fluentui_divider_height"
+        android:layout_below="@id/to_word_converter_headline"
+        android:layout_alignStart="@id/extraction_header_divider"
+        android:layout_alignEnd="@id/extraction_header_divider"
+        android:background="@drawable/ms_row_divider" />
+
+    <com.microsoft.fluentui.listitem.ListItemView
+        android:id="@+id/number_conversion_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/to_word_header_divider"
+        app:title="@string/result_number_conversion"
+        app:titleMaxLines="4"
+        app:titleTruncateAt="end" />
+
+    <EditText
+        android:id="@+id/number_conversion_edit_text"
+        style="@style/Widget.AppTheme.EditText"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@id/number_conversion_result"
+        android:layout_alignStart="@id/number_extraction_edit_text"
+        android:layout_alignEnd="@id/number_extraction_edit_text"
+        android:ems="10"
+        android:layout_marginBottom="@dimen/default_view_margin"
+        android:importantForAutofill="no"
+        android:hint="@string/hint_number_conversion"
+        android:inputType="number|numberSigned|numberDecimal" />
+
+</RelativeLayout>

@@ -150,4 +150,67 @@ public class StringUtils {
 
         return joined.toString();
     }
+
+    /**
+     * Splits a string after each specified number to character
+     *
+     * @param count  number of character to skip before splitting the string
+     * @param string the string to split
+     * @return array of split strings
+     */
+    @NonNull
+    public static String[] splitAfterEach(int count, @NonNull String string) {
+        int length = string.length();
+        int arraySize = (int) Math.ceil((double) length / count);
+
+        String[] splitString = new String[arraySize];
+        for (int i = 0, i2 = 0; i < arraySize; i++) {
+            splitString[i] = string.substring(i2, ((i2 = i2 + count) >= length ? length : i2));
+        }
+
+        return splitString;
+    }
+
+    /**
+     * Splits a string in reverse order after each specified number to character
+     *
+     * @param count  number of character to skip before splitting the string
+     * @param string the string to split
+     * @return array of split strings
+     */
+    @NonNull
+    public static String[] reverseSplitAfterEach(int count, @NonNull String string) {
+        int length = string.length();
+        int arraySize = (int) Math.ceil((double) length / count);
+
+        String[] splitString = new String[arraySize];
+        for (int i = arraySize - 1, i2 = length; i >= 0; i--) {
+            int end = i2;
+            splitString[i] = string.substring((i2 = i2 - count) < 0 ? 0 : i2, end);
+        }
+
+        return splitString;
+    }
+
+    /**
+     * Splits a string in reverse order after each specified number to character
+     * and returns the array in reverse order
+     *
+     * @param count  number of character to skip before splitting the string
+     * @param string the string to split
+     * @return array of split strings
+     */
+    @NonNull
+    public static String[] fullReverseSplitAfterEach(int count, @NonNull String string) {
+        int length = string.length();
+        int arraySize = (int) Math.ceil((double) length / count);
+
+        String[] splitString = new String[arraySize];
+        for (int i = 0, i2 = length; i < arraySize; i++) {
+            int end = i2;
+            splitString[i] = string.substring((i2 = i2 - count) < 0 ? 0 : i2, end);
+        }
+
+        return splitString;
+    }
 }

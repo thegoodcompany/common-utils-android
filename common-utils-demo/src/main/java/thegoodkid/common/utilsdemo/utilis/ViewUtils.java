@@ -37,4 +37,13 @@ public class ViewUtils {
 
         return imageView;
     }
+
+    @NonNull
+    public static ImageView createIcon(@NonNull Context context, @DrawableRes int imageId) {
+        ImageView imageView = new ImageView(context);
+        Drawable drawable = context.getDrawable(imageId);
+        imageView.setImageDrawable(drawable);
+
+        return imageView;
+    }
 }

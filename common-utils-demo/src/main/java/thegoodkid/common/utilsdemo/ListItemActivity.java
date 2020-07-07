@@ -28,10 +28,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import thegoodkid.common.utils.recyclerview.HeaderItem;
-import thegoodkid.common.utils.recyclerview.Section;
 import thegoodkid.common.utilsdemo.databinding.ActivityListItemBinding;
 import thegoodkid.common.utilsdemo.utilis.ViewUtils;
 import thegoodkid.common.utilsdemo.utilis.list.Item;
+import thegoodkid.common.utilsdemo.utilis.list.ItemSection;
 import thegoodkid.common.utilsdemo.utilis.list.ListItemAdapter;
 
 public class ListItemActivity extends AppCompatActivity {
@@ -50,7 +50,7 @@ public class ListItemActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBar.getToolbar());
-        binding.appBar.getToolbar().setTitle(DemoListActivity.Demos.LIST_ITEM.title);
+        binding.appBar.getToolbar().setTitle(DemoListActivity.Demo.LIST_ITEM.title);
 
         binding.appBar.getToolbar().setNavigationIcon(ViewUtils.createNavigationBackDrawable(this));
         binding.appBar.getToolbar().setNavigationOnClickListener(view -> onBackPressed());
@@ -75,7 +75,7 @@ public class ListItemActivity extends AppCompatActivity {
             for (SectionIdentifier identifier : SectionIdentifier.values()) {
                 if (!adapter.hasSection(identifier)) {
                     adapter.addSection(identifier, createSection(identifier));
-                    binding.listContainer.smoothScrollToPosition(adapter.getItemCount() - 1);
+                    binding.listContainer.scrollToPosition(adapter.getItemCount() - 1);
                     return true;
                 }
             }
@@ -93,7 +93,7 @@ public class ListItemActivity extends AppCompatActivity {
     }
 
     private void init() {
-        LinkedHashMap<SectionIdentifier, Section<HeaderItem, Item>> sectionMap = createSectionMap();
+        LinkedHashMap<SectionIdentifier, ItemSection> sectionMap = createSectionMap();
         adapter = new ListItemAdapter<>(this, sectionMap);
 
         binding.listContainer.addItemDecoration(new ListItemDivider(this, DividerItemDecoration.VERTICAL));
@@ -101,8 +101,8 @@ public class ListItemActivity extends AppCompatActivity {
     }
 
     @NotNull
-    private LinkedHashMap<SectionIdentifier, Section<HeaderItem, Item>> createSectionMap() {
-        LinkedHashMap<SectionIdentifier, Section<HeaderItem, Item>> sectionMap = new LinkedHashMap<>();
+    private LinkedHashMap<SectionIdentifier, ItemSection> createSectionMap() {
+        LinkedHashMap<SectionIdentifier, ItemSection> sectionMap = new LinkedHashMap<>();
 
         SectionIdentifier[] identifiers = SectionIdentifier.values();
         for (int i = 0; i < PRIMARY_SECTION_COUNT; i++) {
@@ -125,7 +125,7 @@ public class ListItemActivity extends AppCompatActivity {
     }
 
     @NotNull
-    private Section<HeaderItem, Item> createSection(@NotNull SectionIdentifier identifier) {
+    private ItemSection createSection(@NotNull SectionIdentifier identifier) {
         HeaderItem headerItem = new HeaderItem(identifier.title).setAccessoryView(createSectionAccessoryView(identifier));
         ArrayList<Item> items = new ArrayList<>();
 
@@ -136,7 +136,7 @@ public class ListItemActivity extends AppCompatActivity {
             items.add(item);
         }
 
-        return new Section<>(headerItem, items);
+        return new ItemSection(headerItem, items);
     }
 
     @NotNull
@@ -189,6 +189,7 @@ public class ListItemActivity extends AppCompatActivity {
                     item.setAccessoryView(createItemAccessoryView(section, item));
 
                     adapter.addItem(section, item);
+                    binding.listContainer.scrollToPosition(adapter.getItemPosition(item));
                     break;
                 case R.id.action_remove:
                     adapter.removeSection(section);

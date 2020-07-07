@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @param <H> Header Item Type
@@ -127,6 +128,16 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
         } else {
             throw createSectionNotPresentException(key);
         }
+    }
+
+    public void addItems(K key, List<I> items) {
+        V section = mSectionMap.get(key);
+        if (section == null) throw createSectionNotPresentException(key);
+
+        int startPos = getSectionStartPosition(key) + (section.hasHeader() ? 1 : 0) + section.getItemCount();
+
+        section.addItems(items);
+        notifyItemRangeInserted(startPos, items.size());
     }
 
     protected void replaceItemSilent(@NonNull V section, int position, I itemToReplaceWith) {

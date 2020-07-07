@@ -63,4 +63,22 @@ public class NumberUtilsTest {
 
         System.out.println("Duration: " + duration + " millis");
     }
+
+    @Test
+    public void toWord_isCorrect() {
+        assertThat(NumberUtils.toWord("5634", NumberUtils.ReadMode.DIGIT)).isEqualTo("Five Six Three Four");
+        assertThat(NumberUtils.toWord("5634.7", NumberUtils.ReadMode.DIGIT)).isEqualTo("Five Six Three Four Point Seven");
+        assertThat(NumberUtils.toWord("-5634.7", NumberUtils.ReadMode.DIGIT)).isEqualTo("Minus Five Six Three Four Point Seven");
+
+        assertThat(NumberUtils.toWord("452", NumberUtils.ReadMode.NUMBER)).isEqualTo("Four Hundred Fifty Two");
+        assertThat(NumberUtils.toWord("213", NumberUtils.ReadMode.NUMBER)).isEqualTo("Two Hundred Thirteen");
+        assertThat(NumberUtils.toWord("200", NumberUtils.ReadMode.NUMBER)).isEqualTo("Two Hundred");
+        assertThat(NumberUtils.toWord("-200", NumberUtils.ReadMode.NUMBER)).isEqualTo("Minus Two Hundred");
+
+        assertThat(NumberUtils.toWord("85682", NumberUtils.ReadMode.NUMBER)).isEqualTo("Eighty Five Thousand Six Hundred Eighty Two");
+        assertThat(NumberUtils.toWord("5759472", NumberUtils.ReadMode.NUMBER))
+                .isEqualTo("Five Million Seven Hundred Fifty Nine Thousand Four Hundred Seventy Two");
+        assertThat(NumberUtils.toWord("5000000000000", NumberUtils.ReadMode.NUMBER))
+                .isEqualTo("Five Trillion");
+    }
 }

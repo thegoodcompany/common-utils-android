@@ -55,7 +55,7 @@ public class CalendarUtilsActivity extends AppCompatActivity implements DateTime
     private void setupAppbar() {
         setSupportActionBar(binding.appBar.getToolbar());
 
-        binding.appBar.getToolbar().setTitle(DemoListActivity.Demos.CALENDAR_UTILS.title);
+        binding.appBar.getToolbar().setTitle(DemoListActivity.Demo.CALENDAR_UTILS.title);
         binding.appBar.getToolbar().setNavigationIcon(ViewUtils.createNavigationBackDrawable(this));
         binding.appBar.getToolbar().setNavigationOnClickListener(view -> onBackPressed());
     }

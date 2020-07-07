@@ -26,7 +26,7 @@ public class SystemUtilsActivity extends AppCompatActivity {
 
     private void setupAppbar() {
         setSupportActionBar(binding.appBar.getToolbar());
-        binding.appBar.getToolbar().setTitle(DemoListActivity.Demos.SYSTEM_UTILS.title);
+        binding.appBar.getToolbar().setTitle(DemoListActivity.Demo.SYSTEM_UTILS.title);
 
         binding.appBar.getToolbar().setNavigationIcon(ViewUtils.createNavigationBackDrawable(this));
         binding.appBar.getToolbar().setNavigationOnClickListener(view -> onBackPressed());
