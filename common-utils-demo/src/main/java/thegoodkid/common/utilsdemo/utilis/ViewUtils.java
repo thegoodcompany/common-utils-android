@@ -7,10 +7,11 @@ import android.widget.ImageView;
 import androidx.annotation.AttrRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.widget.ImageViewCompat;
 
 import com.microsoft.fluentui.util.ThemeUtil;
-import com.microsoft.fluentui.util.ThemeUtilsKt;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -18,13 +19,27 @@ import thegoodkid.common.utilsdemo.R;
 
 public class ViewUtils {
     public static Drawable createNavigationBackDrawable(@NonNull Context context) {
-        return ThemeUtilsKt.getTintedDrawable(context, R.drawable.ic_fluent_arrow_left_24_regular,
-                ThemeUtil.INSTANCE.getThemeAttrColor(context, R.attr.fluentuiToolbarIconColor));
+        return createTintedDrawable(context, R.drawable.ic_fluent_arrow_left_24_selector, R.attr.fluentuiToolbarIconColor);
     }
 
-    public static Drawable getTintedDrawable(@NonNull Context context, @DrawableRes int drawableId, @AttrRes int tint) {
+    public static Drawable tintAndGetDrawable(@NonNull Context context, @DrawableRes int drawableId, @AttrRes int tint) {
         int themedColor = ThemeUtil.INSTANCE.getThemeAttrColor(context, tint);
-        return ThemeUtilsKt.getTintedDrawable(context, drawableId, themedColor);
+        Drawable drawable = context.getDrawable(drawableId);
+        if (drawable != null) drawable.setTint(themedColor);
+
+        return drawable;
+    }
+
+    public static Drawable createTintedDrawable(@NonNull Context context, @DrawableRes int drawableId, @AttrRes int tint) {
+        int themedColor = ThemeUtil.INSTANCE.getThemeAttrColor(context, tint);
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+
+        if (drawable != null) {
+            drawable = DrawableCompat.wrap(drawable);
+            DrawableCompat.setTint(drawable.mutate(), themedColor);
+        }
+
+        return drawable;
     }
 
     @NotNull

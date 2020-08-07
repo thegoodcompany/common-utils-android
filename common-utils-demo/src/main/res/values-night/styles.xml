@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <style name="AppTheme" parent="Base.AppTheme">
         <item name="android:statusBarColor">?attr/fluentuiBackgroundSecondaryColor</item>
     </style>
-
-    <!--    <style name="Widget.AppTheme.EditText" parent="Base.Widget.AppTheme.EditText">-->
-    <!--        <item name="backgroundTint">?attr/fluentuiListItemRippleColor</item>-->
-    <!--        <item name="android:colorControlNormal">?attr/fluentuiListItemRippleColor</item>-->
-    <!--        <item name="android:colorControlHighlight">?attr/fluentuiListItemRippleColor</item>-->
-    <!--        <item name="android:colorControlActivated">@color/fluentui_communication_blue</item>-->
-    <!--    </style>-->
 </resources>

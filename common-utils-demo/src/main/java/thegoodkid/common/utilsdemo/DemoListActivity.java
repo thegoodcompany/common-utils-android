@@ -7,8 +7,8 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,7 +33,7 @@ import thegoodkid.common.utilsdemo.utilis.list.Item;
 import thegoodkid.common.utilsdemo.utilis.list.ItemSection;
 import thegoodkid.common.utilsdemo.utilis.list.ListItemAdapter;
 
-public class DemoListActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class DemoListActivity extends BaseAppActivity implements SearchView.OnQueryTextListener {
     private static final String SEARCH_FRAGMENT_TAG = "demo_search_fragment";
     private ActivityDemoListBinding binding;
     private DemoListAdapter adapter;
@@ -50,9 +50,6 @@ public class DemoListActivity extends AppCompatActivity implements SearchView.On
         super.onCreate(savedInstanceState);
         binding = ActivityDemoListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        if (thegoodkid.common.utilsdemo.BuildConfig.DEBUG)
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setupAppbar();
 
@@ -138,16 +135,18 @@ public class DemoListActivity extends AppCompatActivity implements SearchView.On
     }
 
     protected enum Demo {
-        LIST_ITEM("List Item", ListItemActivity.class),
-        NUMBER_UTILS("Number Utils", NumberUtilsActivity.class),
-        SYSTEM_UTILS("System Utils", SystemUtilsActivity.class),
-        CALENDAR_UTILS("Calendar Utils", CalendarUtilsActivity.class);
+        LIST_ITEM("List Item", R.layout.activity_list_item, ListItemActivity.class),
+        NUMBER_UTILS("Number Utils", R.layout.activity_number_utils, NumberUtilsActivity.class),
+        SYSTEM_UTILS("System Utils", R.layout.activity_system_utils, SystemUtilsActivity.class),
+        CALENDAR_UTILS("Calendar Utils", R.layout.activity_calendar_utils, CalendarUtilsActivity.class);
 
-        protected final String title;
+        public final String title;
+        public final int layout;
         protected final Class<? extends AppCompatActivity> activityClass;
 
-        Demo(String title, Class<? extends AppCompatActivity> activity) {
+        Demo(String title, @LayoutRes int layout, Class<? extends AppCompatActivity> activity) {
             this.title = title;
+            this.layout = layout;
             activityClass = activity;
         }
     }

@@ -5,8 +5,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.microsoft.fluentui.bottomsheet.BottomSheet;
 import com.microsoft.fluentui.bottomsheet.BottomSheetItem;
 
@@ -18,7 +16,7 @@ import thegoodkid.common.utils.NumberUtils;
 import thegoodkid.common.utilsdemo.databinding.ActivityNumberUtilsBinding;
 import thegoodkid.common.utilsdemo.utilis.ViewUtils;
 
-public class NumberUtilsActivity extends AppCompatActivity implements BottomSheetItem.OnClickListener {
+public class NumberUtilsActivity extends DemoActivity implements BottomSheetItem.OnClickListener {
     private static final String SELECT_READ_MODE_TAG = "thegoodkid.common.utilsdemo.NumberUtilsActivity.tag.READ_MODE";
 
     private ActivityNumberUtilsBinding binding;
@@ -27,19 +25,14 @@ public class NumberUtilsActivity extends AppCompatActivity implements BottomShee
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityNumberUtilsBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        binding = ActivityNumberUtilsBinding.bind(getContentView());
 
-        setupAppbar();
         init();
     }
 
-    private void setupAppbar() {
-        binding.appBar.getToolbar().setTitle(DemoListActivity.Demo.NUMBER_UTILS.title);
-        setSupportActionBar(binding.appBar.getToolbar());
-
-        binding.appBar.getToolbar().setNavigationIcon(ViewUtils.createNavigationBackDrawable(this));
-        binding.appBar.getToolbar().setNavigationOnClickListener(view -> onBackPressed());
+    @Override
+    protected DemoListActivity.Demo getDemo() {
+        return DemoListActivity.Demo.NUMBER_UTILS;
     }
 
     private void init() {

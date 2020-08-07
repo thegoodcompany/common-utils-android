@@ -375,10 +375,9 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
         if (section == null) throw createSectionNotPresentException(sectionKey);
 
         int startPos = getSectionStartPosition(sectionKey);
-        int itemCount = section.getItemCount() + (section.hasHeader() ? 1 : 0);
+        int itemCount = section.getItemCount();
 
         section.clearItems();
-
         notifyItemRangeRemoved(startPos, itemCount);
     }
 

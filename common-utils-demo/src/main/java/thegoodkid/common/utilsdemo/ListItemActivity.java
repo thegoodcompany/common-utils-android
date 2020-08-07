@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.TextViewCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 
@@ -29,12 +28,11 @@ import java.util.LinkedHashMap;
 
 import thegoodkid.common.utils.recyclerview.HeaderItem;
 import thegoodkid.common.utilsdemo.databinding.ActivityListItemBinding;
-import thegoodkid.common.utilsdemo.utilis.ViewUtils;
 import thegoodkid.common.utilsdemo.utilis.list.Item;
 import thegoodkid.common.utilsdemo.utilis.list.ItemSection;
 import thegoodkid.common.utilsdemo.utilis.list.ListItemAdapter;
 
-public class ListItemActivity extends AppCompatActivity {
+public class ListItemActivity extends DemoActivity {
     private static final int DEFAULT_SECTION_ITEM_COUNT = 4;
     private static final int PRIMARY_SECTION_COUNT = 5;
 
@@ -46,14 +44,7 @@ public class ListItemActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityListItemBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        setSupportActionBar(binding.appBar.getToolbar());
-        binding.appBar.getToolbar().setTitle(DemoListActivity.Demo.LIST_ITEM.title);
-
-        binding.appBar.getToolbar().setNavigationIcon(ViewUtils.createNavigationBackDrawable(this));
-        binding.appBar.getToolbar().setNavigationOnClickListener(view -> onBackPressed());
+        binding = ActivityListItemBinding.bind(getContentView());
 
         init();
     }
@@ -75,6 +66,7 @@ public class ListItemActivity extends AppCompatActivity {
             for (SectionIdentifier identifier : SectionIdentifier.values()) {
                 if (!adapter.hasSection(identifier)) {
                     adapter.addSection(identifier, createSection(identifier));
+                    collapseAppbar();
                     binding.listContainer.scrollToPosition(adapter.getItemCount() - 1);
                     return true;
                 }
@@ -90,6 +82,11 @@ public class ListItemActivity extends AppCompatActivity {
                 .show();
 
         return false;
+    }
+
+    @Override
+    protected DemoListActivity.Demo getDemo() {
+        return DemoListActivity.Demo.LIST_ITEM;
     }
 
     private void init() {
