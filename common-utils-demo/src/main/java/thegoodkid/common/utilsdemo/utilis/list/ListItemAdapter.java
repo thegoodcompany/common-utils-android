@@ -37,7 +37,6 @@ public class ListItemAdapter<K extends Enum<K>> extends BaseListAdapter<K, ItemS
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         switch (ViewType.values()[viewType]) {
@@ -79,7 +78,6 @@ public class ListItemAdapter<K extends Enum<K>> extends BaseListAdapter<K, ItemS
             itemHolder.mItemView.setSubtitle(subtitle == null ? "" : subtitle);
             itemHolder.mItemView.setFooter(footer == null ? "" : footer);
             itemHolder.mItemView.setCustomViewSize(viewSize == null ? ListItemView.Companion.getDEFAULT_CUSTOM_VIEW_SIZE() : viewSize);
-
         } else if (holder instanceof ListItemAdapter.HeaderViewHolder) {
             HeaderViewHolder itemHolder = (HeaderViewHolder) holder;
             HeaderItem headerItem = (HeaderItem) baseItem;

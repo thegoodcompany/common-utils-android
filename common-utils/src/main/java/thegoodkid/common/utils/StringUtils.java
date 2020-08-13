@@ -165,14 +165,14 @@ public class StringUtils {
 
         String[] splitString = new String[arraySize];
         for (int i = 0, i2 = 0; i < arraySize; i++) {
-            splitString[i] = string.substring(i2, ((i2 = i2 + count) >= length ? length : i2));
+            splitString[i] = string.substring(i2, ((i2 += count) >= length ? length : i2));
         }
 
         return splitString;
     }
 
     /**
-     * Splits a string in reverse order after each specified number to character
+     * Splits a string in reverse order after each specified number of characters
      *
      * @param count  number of character to skip before splitting the string
      * @param string the string to split
@@ -186,7 +186,7 @@ public class StringUtils {
         String[] splitString = new String[arraySize];
         for (int i = arraySize - 1, i2 = length; i >= 0; i--) {
             int end = i2;
-            splitString[i] = string.substring((i2 = i2 - count) < 0 ? 0 : i2, end);
+            splitString[i] = string.substring((i2 -= count) < 0 ? 0 : i2, end);
         }
 
         return splitString;
@@ -208,7 +208,7 @@ public class StringUtils {
         String[] splitString = new String[arraySize];
         for (int i = 0, i2 = length; i < arraySize; i++) {
             int end = i2;
-            splitString[i] = string.substring((i2 = i2 - count) < 0 ? 0 : i2, end);
+            splitString[i] = string.substring((i2 -= count) < 0 ? 0 : i2, end);
         }
 
         return splitString;

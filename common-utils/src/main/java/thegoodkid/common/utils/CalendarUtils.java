@@ -129,6 +129,12 @@ public class CalendarUtils {
         return duration;
     }
 
+    /**
+     * Check whether {@code year} is a leap year or not
+     *
+     * @param year Year to check
+     * @return true if {@code year} is a leap year otherwise false
+     */
     public static boolean isLeapYear(int year) {
         return (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0));
     }
@@ -153,6 +159,17 @@ public class CalendarUtils {
         }
     }
 
+    /**
+     * Calculate number of leap days between two dates
+     *
+     * @param beforeYear  Calculation start year
+     * @param beforeMonth Calculation start month
+     * @param beforeDay   Calculation start day
+     * @param afterYear   Calculation end year
+     * @param afterMonth  Calculation end month
+     * @param afterDay    Calculation end day
+     * @return Number of leap days
+     */
     public static int calculateLeapDays(int beforeYear, int beforeMonth, int beforeDay, int afterYear, int afterMonth, int afterDay) {
         int leapDays = 0;
 
@@ -179,6 +196,9 @@ public class CalendarUtils {
         return leapDays;
     }
 
+    /**
+     * Check whether subject date is before destination date
+     */
     public static boolean isBefore(int subjectDay, int subjectMonth, int destinationDay, int destinationMonth) {
         return subjectMonth < destinationMonth || (subjectMonth == destinationMonth && subjectDay < destinationDay);
     }

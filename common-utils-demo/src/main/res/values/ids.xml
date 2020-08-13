@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="action_add" type="id" />
+    <item name="action_add_item" type="id" />
+    <item name="action_add_section" type="id" />
+    <item name="action_clear" type="id" />
+    <item name="action_clear_section" type="id" />
     <item name="action_remove" type="id" />
+    <item name="action_remove_item" type="id" />
+    <item name="action_remove_section" type="id" />
     <item name="read_mode_digit" type="id" />
     <item name="read_mode_number" type="id" />
 </resources>

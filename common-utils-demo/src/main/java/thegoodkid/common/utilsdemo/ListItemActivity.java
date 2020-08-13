@@ -161,11 +161,11 @@ public class ListItemActivity extends DemoActivity {
 
     private void showItemActions(SectionIdentifier section, Item item) {
         ArrayList<BottomSheetItem> sheetItems = new ArrayList<>();
-        sheetItems.add(new BottomSheetItem(R.id.action_remove, R.drawable.ic_fluent_remove_24_regular, getString(R.string.remove_item)));
+        sheetItems.add(new BottomSheetItem(R.id.action_remove_item, R.drawable.ic_fluent_remove_24_regular, getString(R.string.remove_item)));
 
         BottomSheetDialog dialog = new BottomSheetDialog(this, sheetItems);
         dialog.setOnItemClickListener(bottomSheetItem -> {
-            if (bottomSheetItem.getId() == R.id.action_remove) {
+            if (bottomSheetItem.getId() == R.id.action_remove_item) {
                 adapter.removeItemFromSection(section, item);
             }
         });
@@ -175,20 +175,25 @@ public class ListItemActivity extends DemoActivity {
 
     private void showSectionActions(SectionIdentifier section) {
         ArrayList<BottomSheetItem> sheetItems = new ArrayList<>();
-        sheetItems.add(new BottomSheetItem(R.id.action_add, R.drawable.ic_fluent_add_24_regular, getString(R.string.add_item)));
-        sheetItems.add(new BottomSheetItem(R.id.action_remove, R.drawable.ic_fluent_remove_24_regular, getString(R.string.remove_section)));
+        sheetItems.add(new BottomSheetItem(R.id.action_add_item, R.drawable.ic_fluent_add_24_regular, getString(R.string.add_item)));
+        sheetItems.add(new BottomSheetItem(R.id.action_clear_section, R.drawable.ic_fluent_erase_24_regular, getString(R.string.remove_section_items)));
+        sheetItems.add(new BottomSheetItem(R.id.action_remove_section, R.drawable.ic_fluent_remove_24_regular, getString(R.string.remove_section)));
 
         BottomSheetDialog dialog = new BottomSheetDialog(this, sheetItems);
         dialog.setOnItemClickListener(bottomSheetItem -> {
             switch (bottomSheetItem.getId()) {
-                case R.id.action_add:
+                case R.id.action_add_item:
                     Item item = createItem();
                     item.setAccessoryView(createItemAccessoryView(section, item));
 
                     adapter.addItem(section, item);
+                    collapseAppbar();
                     binding.listContainer.scrollToPosition(adapter.getItemPosition(item));
                     break;
-                case R.id.action_remove:
+                case R.id.action_clear_section:
+                    adapter.clearSectionItems(section);
+                    break;
+                case R.id.action_remove_section:
                     adapter.removeSection(section);
                     break;
             }
