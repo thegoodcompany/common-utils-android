@@ -3,7 +3,6 @@ package thegoodkid.common.utilsdemo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.microsoft.fluentui.datetimepicker.DateTimePicker;
@@ -16,9 +15,8 @@ import org.threeten.bp.ZonedDateTime;
 import thegoodkid.common.utils.CalendarUtils;
 import thegoodkid.common.utils.StringUtils;
 import thegoodkid.common.utilsdemo.databinding.ActivityCalendarUtilsBinding;
-import thegoodkid.common.utilsdemo.utilis.ViewUtils;
 
-public class CalendarUtilsActivity extends AppCompatActivity implements DateTimePickerDialog.OnDateTimePickedListener {
+public class CalendarUtilsActivity extends DemoActivity implements DateTimePickerDialog.OnDateTimePickedListener {
     private static final String START_DATE = "start_date";
     private static final String DURATION = "duration";
 
@@ -29,7 +27,7 @@ public class CalendarUtilsActivity extends AppCompatActivity implements DateTime
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityCalendarUtilsBinding.inflate(getLayoutInflater());
+        binding = ActivityCalendarUtilsBinding.bind(getContentView());
 
         if (savedInstanceState != null) {
             startDate = (ZonedDateTime) savedInstanceState.getSerializable(START_DATE);
@@ -38,9 +36,6 @@ public class CalendarUtilsActivity extends AppCompatActivity implements DateTime
             if (startDate != null && duration != null) onDateTimePicked(startDate, duration);
         }
 
-        setContentView(binding.getRoot());
-
-        setupAppbar();
         init();
     }
 
@@ -52,12 +47,9 @@ public class CalendarUtilsActivity extends AppCompatActivity implements DateTime
         outState.putSerializable(DURATION, duration);
     }
 
-    private void setupAppbar() {
-        setSupportActionBar(binding.appBar.getToolbar());
-
-        binding.appBar.getToolbar().setTitle(DemoListActivity.Demos.CALENDAR_UTILS.title);
-        binding.appBar.getToolbar().setNavigationIcon(ViewUtils.createNavigationBackDrawable(this));
-        binding.appBar.getToolbar().setNavigationOnClickListener(view -> onBackPressed());
+    @Override
+    protected DemoListActivity.Demo getDemo() {
+        return DemoListActivity.Demo.CALENDAR_UTILS;
     }
 
     private void init() {

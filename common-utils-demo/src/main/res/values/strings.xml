@@ -30,14 +30,21 @@
 
     <!--messages-->
     <string name="section_full">Available sections are already created.</string>
-    <string name="result_string_with_number">Extracted Number will be Showed Here</string>
+    <string name="result_number_extraction">Extracted number will be displayed here</string>
     <string name="on_list_item_click">Item clicked</string>
     <string name="result_days_interval">No range selected</string>
+    <string name="result_number_conversion">Converted number will be displayed here</string>
 
     <!--hints-->
-    <string name="hint_string_with_number">May or may not contain number</string>
+    <string name="hint_number_extraction">May or may not contain number</string>
 
     <!--description-->
     <string name="divider">Divider</string>
     <string name="set">Set</string>
+    <string name="headline_word_conversion">Convert to Word</string>
+    <string name="hint_number_conversion">Type a number</string>
+    <string name="select_read_mode">Select Read Mode</string>
+    <string name="read_mode_digit">Read as Digits</string>
+    <string name="read_mode_number">Read as Number</string>
+    <string name="remove_section_items">Remove all Items</string>
 </resources>

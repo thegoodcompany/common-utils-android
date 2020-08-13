@@ -6,15 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".ListItemActivity">
 
-    <com.microsoft.fluentui.appbarlayout.AppBarLayout
-        android:id="@+id/app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <com.microsoft.fluentui.view.MSRecyclerView
         android:id="@+id/list_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/app_bar"
+        android:layout_alignParentTop="true"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 </RelativeLayout>

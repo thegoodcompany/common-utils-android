@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @param <H> Header Item Type
@@ -98,8 +99,7 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
         V section = mSectionMap.get(key);
         if (section != null) {
             section.addItem(item);
-
-            notifyItemInserted(getSectionStartPosition(key) + getItemCount() - (section.hasHeader() ? 0 : 1));
+            notifyItemInserted(getSectionStartPosition(key) + section.getItemCount() - (section.hasHeader() ? 0 : 1));
         } else {
             throw createSectionNotPresentException(key);
         }
@@ -122,15 +122,20 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
         V section = mSectionMap.get(key);
         if (section != null) {
             section.addItem(position, item);
-
             notifyItemInserted(getSectionStartPosition(key) + position + (section.hasHeader() ? 1 : 0));
         } else {
             throw createSectionNotPresentException(key);
         }
     }
 
-    protected void replaceItemSilent(@NonNull V section, int position, I itemToReplaceWith) {
-        section.replaceItem(position, itemToReplaceWith);
+    public void addItems(K key, List<I> items) {
+        V section = mSectionMap.get(key);
+        if (section == null) throw createSectionNotPresentException(key);
+
+        int startPos = getSectionStartPosition(key) + (section.hasHeader() ? 1 : 0) + section.getItemCount();
+
+        section.addItems(items);
+        notifyItemRangeInserted(startPos, items.size());
     }
 
     /**
@@ -150,8 +155,7 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
         int itemCount = section.getItemCount();
         for (int i = 0; i < itemCount; i++) {
             if (section.getItem(i).equals(itemToReplace)) {
-                section.removeItem(i);
-                section.addItem(i, itemToReplaceWith);
+                section.replaceItem(i, itemToReplaceWith);
 
                 notifyItemChanged(startPos + i + (section.hasHeader() ? 1 : 0));
                 return true;
@@ -173,8 +177,7 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
         V section = mSectionMap.get(sectionKey);
         if (section == null) throw createSectionNotPresentException(sectionKey);
 
-        replaceItemSilent(section, position, itemToReplaceWith);
-
+        section.replaceItem(position, itemToReplaceWith);
         int startPos = getSectionStartPosition(sectionKey);
         int itemPos = startPos + position + (section.hasHeader() ? 1 : 0);
 
@@ -217,8 +220,7 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
         V section = mSectionMap.get(sectionKey);
         if (section == null) return false;
 
-        replaceItemSilent(section, oldPos, itemToReplaceWith);
-
+        section.replaceItem(oldPos, itemToReplaceWith);
         int startPos = getSectionStartPosition(sectionKey) + (section.hasHeader() ? 1 : 0);
         int itemPosThen = startPos + oldPos;
         int itemPosNow = startPos + newPos;
@@ -364,11 +366,10 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
         if (section == null) throw createSectionNotPresentException(sectionKey);
 
         int startPos = getSectionStartPosition(sectionKey);
-        int itemCount = section.getItemCount() + (section.hasHeader() ? 1 : 0);
+        int itemCount = section.getItemCount();
 
         section.clearItems();
-
-        notifyItemRangeRemoved(startPos, itemCount);
+        notifyItemRangeRemoved(startPos + (section.hasHeader() ? 1 : 0), itemCount);
     }
 
     /**

@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.TextViewCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 
@@ -28,13 +27,12 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import thegoodkid.common.utils.recyclerview.HeaderItem;
-import thegoodkid.common.utils.recyclerview.Section;
 import thegoodkid.common.utilsdemo.databinding.ActivityListItemBinding;
-import thegoodkid.common.utilsdemo.utilis.ViewUtils;
 import thegoodkid.common.utilsdemo.utilis.list.Item;
+import thegoodkid.common.utilsdemo.utilis.list.ItemSection;
 import thegoodkid.common.utilsdemo.utilis.list.ListItemAdapter;
 
-public class ListItemActivity extends AppCompatActivity {
+public class ListItemActivity extends DemoActivity {
     private static final int DEFAULT_SECTION_ITEM_COUNT = 4;
     private static final int PRIMARY_SECTION_COUNT = 5;
 
@@ -46,14 +44,7 @@ public class ListItemActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityListItemBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        setSupportActionBar(binding.appBar.getToolbar());
-        binding.appBar.getToolbar().setTitle(DemoListActivity.Demos.LIST_ITEM.title);
-
-        binding.appBar.getToolbar().setNavigationIcon(ViewUtils.createNavigationBackDrawable(this));
-        binding.appBar.getToolbar().setNavigationOnClickListener(view -> onBackPressed());
+        binding = ActivityListItemBinding.bind(getContentView());
 
         init();
     }
@@ -75,7 +66,8 @@ public class ListItemActivity extends AppCompatActivity {
             for (SectionIdentifier identifier : SectionIdentifier.values()) {
                 if (!adapter.hasSection(identifier)) {
                     adapter.addSection(identifier, createSection(identifier));
-                    binding.listContainer.smoothScrollToPosition(adapter.getItemCount() - 1);
+                    collapseAppbar();
+                    binding.listContainer.scrollToPosition(adapter.getItemCount() - 1);
                     return true;
                 }
             }
@@ -92,8 +84,13 @@ public class ListItemActivity extends AppCompatActivity {
         return false;
     }
 
+    @Override
+    protected DemoListActivity.Demo getDemo() {
+        return DemoListActivity.Demo.LIST_ITEM;
+    }
+
     private void init() {
-        LinkedHashMap<SectionIdentifier, Section<HeaderItem, Item>> sectionMap = createSectionMap();
+        LinkedHashMap<SectionIdentifier, ItemSection> sectionMap = createSectionMap();
         adapter = new ListItemAdapter<>(this, sectionMap);
 
         binding.listContainer.addItemDecoration(new ListItemDivider(this, DividerItemDecoration.VERTICAL));
@@ -101,8 +98,8 @@ public class ListItemActivity extends AppCompatActivity {
     }
 
     @NotNull
-    private LinkedHashMap<SectionIdentifier, Section<HeaderItem, Item>> createSectionMap() {
-        LinkedHashMap<SectionIdentifier, Section<HeaderItem, Item>> sectionMap = new LinkedHashMap<>();
+    private LinkedHashMap<SectionIdentifier, ItemSection> createSectionMap() {
+        LinkedHashMap<SectionIdentifier, ItemSection> sectionMap = new LinkedHashMap<>();
 
         SectionIdentifier[] identifiers = SectionIdentifier.values();
         for (int i = 0; i < PRIMARY_SECTION_COUNT; i++) {
@@ -125,7 +122,7 @@ public class ListItemActivity extends AppCompatActivity {
     }
 
     @NotNull
-    private Section<HeaderItem, Item> createSection(@NotNull SectionIdentifier identifier) {
+    private ItemSection createSection(@NotNull SectionIdentifier identifier) {
         HeaderItem headerItem = new HeaderItem(identifier.title).setAccessoryView(createSectionAccessoryView(identifier));
         ArrayList<Item> items = new ArrayList<>();
 
@@ -136,7 +133,7 @@ public class ListItemActivity extends AppCompatActivity {
             items.add(item);
         }
 
-        return new Section<>(headerItem, items);
+        return new ItemSection(headerItem, items);
     }
 
     @NotNull
@@ -164,11 +161,11 @@ public class ListItemActivity extends AppCompatActivity {
 
     private void showItemActions(SectionIdentifier section, Item item) {
         ArrayList<BottomSheetItem> sheetItems = new ArrayList<>();
-        sheetItems.add(new BottomSheetItem(R.id.action_remove, R.drawable.ic_fluent_remove_24_regular, getString(R.string.remove_item)));
+        sheetItems.add(new BottomSheetItem(R.id.action_remove_item, R.drawable.ic_fluent_remove_24_regular, getString(R.string.remove_item)));
 
         BottomSheetDialog dialog = new BottomSheetDialog(this, sheetItems);
         dialog.setOnItemClickListener(bottomSheetItem -> {
-            if (bottomSheetItem.getId() == R.id.action_remove) {
+            if (bottomSheetItem.getId() == R.id.action_remove_item) {
                 adapter.removeItemFromSection(section, item);
             }
         });
@@ -178,19 +175,25 @@ public class ListItemActivity extends AppCompatActivity {
 
     private void showSectionActions(SectionIdentifier section) {
         ArrayList<BottomSheetItem> sheetItems = new ArrayList<>();
-        sheetItems.add(new BottomSheetItem(R.id.action_add, R.drawable.ic_fluent_add_24_regular, getString(R.string.add_item)));
-        sheetItems.add(new BottomSheetItem(R.id.action_remove, R.drawable.ic_fluent_remove_24_regular, getString(R.string.remove_section)));
+        sheetItems.add(new BottomSheetItem(R.id.action_add_item, R.drawable.ic_fluent_add_24_regular, getString(R.string.add_item)));
+        sheetItems.add(new BottomSheetItem(R.id.action_clear_section, R.drawable.ic_fluent_erase_24_regular, getString(R.string.remove_section_items)));
+        sheetItems.add(new BottomSheetItem(R.id.action_remove_section, R.drawable.ic_fluent_remove_24_regular, getString(R.string.remove_section)));
 
         BottomSheetDialog dialog = new BottomSheetDialog(this, sheetItems);
         dialog.setOnItemClickListener(bottomSheetItem -> {
             switch (bottomSheetItem.getId()) {
-                case R.id.action_add:
+                case R.id.action_add_item:
                     Item item = createItem();
                     item.setAccessoryView(createItemAccessoryView(section, item));
 
                     adapter.addItem(section, item);
+                    collapseAppbar();
+                    binding.listContainer.scrollToPosition(adapter.getItemPosition(item));
                     break;
-                case R.id.action_remove:
+                case R.id.action_clear_section:
+                    adapter.clearSectionItems(section);
+                    break;
+                case R.id.action_remove_section:
                     adapter.removeSection(section);
                     break;
             }

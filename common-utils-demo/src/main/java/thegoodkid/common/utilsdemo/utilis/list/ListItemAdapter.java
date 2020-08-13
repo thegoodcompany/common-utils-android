@@ -21,15 +21,14 @@ import thegoodkid.common.utils.recyclerview.BaseItem;
 import thegoodkid.common.utils.recyclerview.BaseListAdapter;
 import thegoodkid.common.utils.recyclerview.ButtonItem;
 import thegoodkid.common.utils.recyclerview.HeaderItem;
-import thegoodkid.common.utils.recyclerview.Section;
 import thegoodkid.common.utilsdemo.R;
 import thegoodkid.common.utilsdemo.databinding.ViewButtonBinding;
 
-public class ListItemAdapter<K extends Enum<K>> extends BaseListAdapter<K, Section<HeaderItem, Item>, HeaderItem, Item, RecyclerView.ViewHolder> {
+public class ListItemAdapter<K extends Enum<K>> extends BaseListAdapter<K, ItemSection, HeaderItem, Item, RecyclerView.ViewHolder> {
     @NonNull
     private Context mContext;
 
-    public ListItemAdapter(@NonNull Context context, LinkedHashMap<K, Section<HeaderItem, Item>> sectionMap) {
+    public ListItemAdapter(@NonNull Context context, LinkedHashMap<K, ItemSection> sectionMap) {
         super(sectionMap);
 
         mContext = context;
@@ -38,7 +37,6 @@ public class ListItemAdapter<K extends Enum<K>> extends BaseListAdapter<K, Secti
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         switch (ViewType.values()[viewType]) {
@@ -80,7 +78,6 @@ public class ListItemAdapter<K extends Enum<K>> extends BaseListAdapter<K, Secti
             itemHolder.mItemView.setSubtitle(subtitle == null ? "" : subtitle);
             itemHolder.mItemView.setFooter(footer == null ? "" : footer);
             itemHolder.mItemView.setCustomViewSize(viewSize == null ? ListItemView.Companion.getDEFAULT_CUSTOM_VIEW_SIZE() : viewSize);
-
         } else if (holder instanceof ListItemAdapter.HeaderViewHolder) {
             HeaderViewHolder itemHolder = (HeaderViewHolder) holder;
             HeaderItem headerItem = (HeaderItem) baseItem;
@@ -96,6 +93,11 @@ public class ListItemAdapter<K extends Enum<K>> extends BaseListAdapter<K, Secti
         }
 
         runAfterwards.run();
+    }
+
+    @Override
+    public int getItemPosition(Item item) {
+        return super.getItemPosition(item);
     }
 
     static class HeaderViewHolder extends RecyclerView.ViewHolder {

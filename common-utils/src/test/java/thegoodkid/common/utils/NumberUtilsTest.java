@@ -63,4 +63,38 @@ public class NumberUtilsTest {
 
         System.out.println("Duration: " + duration + " millis");
     }
+
+    @Test
+    public void toWord_isCorrect() {
+        assertThat(NumberUtils.toWord("5634", NumberUtils.ReadMode.DIGIT)).isEqualTo("Five six three four");
+        assertThat(NumberUtils.toWord("5634.7", NumberUtils.ReadMode.DIGIT)).isEqualTo("Five six three four point seven");
+        assertThat(NumberUtils.toWord("-5634.7", NumberUtils.ReadMode.DIGIT)).isEqualTo("Minus five six three four point seven");
+
+        assertThat(NumberUtils.toWord("452", NumberUtils.ReadMode.NUMBER)).isEqualTo("Four hundred fifty two");
+        assertThat(NumberUtils.toWord("1011", NumberUtils.ReadMode.NUMBER)).isEqualTo("One thousand eleven");
+        assertThat(NumberUtils.toWord("213", NumberUtils.ReadMode.NUMBER)).isEqualTo("Two hundred thirteen");
+        assertThat(NumberUtils.toWord("213.56", NumberUtils.ReadMode.NUMBER)).isEqualTo("Two hundred thirteen point five six");
+        assertThat(NumberUtils.toWord(".563", NumberUtils.ReadMode.NUMBER)).isEqualTo("Point five six three");
+        assertThat(NumberUtils.toWord("200", NumberUtils.ReadMode.NUMBER)).isEqualTo("Two hundred");
+        assertThat(NumberUtils.toWord("-200", NumberUtils.ReadMode.NUMBER)).isEqualTo("Minus two hundred");
+
+        assertThat(NumberUtils.toWord("85682", NumberUtils.ReadMode.NUMBER)).isEqualTo("Eighty five thousand six hundred eighty two");
+        assertThat(NumberUtils.toWord("5759472", NumberUtils.ReadMode.NUMBER))
+                .isEqualTo("Five million seven hundred fifty nine thousand four hundred seventy two");
+        assertThat(NumberUtils.toWord("5000000000000", NumberUtils.ReadMode.NUMBER))
+                .isEqualTo("Five trillion");
+    }
+
+    @Test
+    public void toWord_performance() {
+        long amount = 420000;
+
+        long startMillis = System.currentTimeMillis();
+        for (long i = 0; i < amount; i++) {
+            NumberUtils.toWord("54632.884", NumberUtils.ReadMode.NUMBER);
+        }
+        long duration = System.currentTimeMillis() - startMillis;
+
+        System.out.println("Duration: " + duration + " millis");
+    }
 }
