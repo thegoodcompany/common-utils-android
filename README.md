@@ -12,7 +12,7 @@ common-utils-android contains some of the commonly used android functions.
 
 ## Install and use
 ### Requirements
-API 21+
+API 16+
 
 ### 1. Using Jitpack
 * Add the JitPack maven repository to your project level build.gradle file:
