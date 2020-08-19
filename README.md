@@ -4,11 +4,11 @@ __An effort to reduce re-writing similar codes across projects.__
 common-utils-android contains some of the commonly used android functions.
 
 ## Utilities
-- [CalendarUtils](https://github.com/thegoodcompany/common-utils-android/blob/main/common-utils/src/main/java/thegoodkid/common/utils/CalendarUtils.java)
-- [NumberUtils](https://github.com/thegoodcompany/common-utils-android/blob/main/common-utils/src/main/java/thegoodkid/common/utils/NumberUtils.java)
-- [StringUtils](https://github.com/thegoodcompany/common-utils-android/blob/main/common-utils/src/main/java/thegoodkid/common/utils/StringUtils.java)
-- [SystemUtils](https://github.com/thegoodcompany/common-utils-android/blob/main/common-utils/src/main/java/thegoodkid/common/utils/SystemUtils.java)
-- [BaseListAdapter](https://github.com/thegoodcompany/common-utils-android/blob/main/common-utils/src/main/java/thegoodkid/common/utils/recyclerview/BaseListAdapter.java) - a recyclerview adapter w/ some predefined functionality
+- [CalendarUtils](https://github.com/thegoodcompany/common-utils-android/blob/main/common-utils/src/main/java/thegoodcompany/common/utils/CalendarUtils.java)
+- [NumberUtils](https://github.com/thegoodcompany/common-utils-android/blob/main/common-utils/src/main/java/thegoodcompany/common/utils/NumberUtils.java)
+- [StringUtils](https://github.com/thegoodcompany/common-utils-android/blob/main/common-utils/src/main/java/thegoodcompany/common/utils/StringUtils.java)
+- [SystemUtils](https://github.com/thegoodcompany/common-utils-android/blob/main/common-utils/src/main/java/thegoodcompany/common/utils/SystemUtils.java)
+- [BaseListAdapter](https://github.com/thegoodcompany/common-utils-android/blob/main/common-utils/src/main/java/thegoodcompany/common/utils/recyclerview/BaseListAdapter.java) - a recyclerview adapter w/ some predefined functionality
 
 ## Install and use
 ### Requirements
