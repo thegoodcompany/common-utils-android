@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) The Good Company. All rights reserved.
+ * Licensed under the MIT License.
+ */
+
 package thegoodcompany.common.utilsdemo;
 
 import android.content.Context;
@@ -26,7 +31,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
-import thegoodcompany.common.utils.BuildConfig;
 import thegoodcompany.common.utilsdemo.databinding.ActivityDemoListBinding;
 import thegoodcompany.common.utilsdemo.databinding.FragmentDemoSearchBinding;
 import thegoodcompany.common.utilsdemo.utilis.list.Item;
@@ -38,7 +42,7 @@ public class DemoListActivity extends BaseAppActivity implements SearchView.OnQu
     private ActivityDemoListBinding binding;
     private DemoListAdapter adapter;
     private Handler queryHandler;
-    private LinkedList<Runnable> queries = new LinkedList<>();
+    private final LinkedList<Runnable> queries = new LinkedList<>();
 
     private static void openDemoActivity(Context context, @NonNull Demo demo) {
         Intent intent = new Intent(context, demo.activityClass);

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) The Good Company. All rights reserved.
+ * Licensed under the MIT License.
+ */
+
 package thegoodcompany.common.utils.recyclerview;
 
 import androidx.annotation.NonNull;
@@ -9,7 +14,7 @@ public class Section<H extends BaseHeaderItem, I extends BaseItem> {
     @Nullable
     private H mHeader;
     @NonNull
-    private List<I> mItems;
+    private final List<I> mItems;
 
     private boolean mHasHeader;
 

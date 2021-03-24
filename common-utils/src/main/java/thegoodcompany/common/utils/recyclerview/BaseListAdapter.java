@@ -1,8 +1,15 @@
+/*
+ * Copyright (c) The Good Company. All rights reserved.
+ * Licensed under the MIT License.
+ */
+
 package thegoodcompany.common.utils.recyclerview;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +27,7 @@ import java.util.List;
 public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>, H extends BaseHeaderItem, I extends BaseItem,
         VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
-    private LinkedHashMap<K, V> mSectionMap;
+    private final LinkedHashMap<K, V> mSectionMap;
     private OnLoadMoreListener<K> mOnLoadMoreListener;
 
     private boolean mShouldRespectSectionOrder;
@@ -184,6 +191,24 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
         notifyItemChanged(itemPos);
     }
 
+    public boolean refreshItemView(K sectionKey, BaseItem item) {
+        V section = mSectionMap.get(sectionKey);
+        if (section == null) return false;
+
+        int startPos = getSectionStartPosition(sectionKey) + (section.hasHeader() ? 1 : 0);
+        int itemCount = section.getItemCount();
+
+        for (int i = 0; i < itemCount; i++) {
+            if (section.getItem(i).equals(item)) {
+                notifyItemChanged(startPos + i);
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
     public boolean moveItemInSection(K sectionKey, int oldPos, int newPos) {
         V section = mSectionMap.get(sectionKey);
         if (section == null) return false;
@@ -300,6 +325,25 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
         }
 
         return false;
+    }
+
+    /**
+     * Removes a range of items from section
+     *
+     * @param sectionKey The section to remove the items from
+     * @param start      starting pos (inclusive)
+     * @param count      number of items to remove
+     */
+    public void removeItemsRange(@NonNull K sectionKey, int start, int count) {
+        V v = mSectionMap.get(sectionKey);
+        if (v == null) return;
+
+        int startPos = getSectionStartPosition(sectionKey) + (v.hasHeader() ? 1 : 0);
+        for (int i = start, limit = start + count; i < limit; i++) {
+            v.removeItem(i);
+        }
+
+        notifyItemRangeRemoved(startPos, count);
     }
 
     public boolean removeSection(K sectionKey) {
@@ -538,7 +582,8 @@ public abstract class BaseListAdapter<K extends Enum<K>, V extends Section<H, I>
         return mShouldRespectSectionOrder;
     }
 
-    private NullPointerException createSectionNotPresentException(K providedKey) {
+    @Contract("_ -> new")
+    private @NonNull NullPointerException createSectionNotPresentException(K providedKey) {
         return new NullPointerException("Section not present; couldn't complete action (provided section: " + providedKey +
                 "; available sections: " + mSectionMap.keySet() + ")");
     }

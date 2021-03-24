@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) The Good Company. All rights reserved.
+ * Licensed under the MIT License.
+ */
+
 package thegoodcompany.common.utilsdemo;
 
 import android.os.Bundle;
@@ -5,10 +10,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import com.microsoft.fluentui.bottomsheet.BottomSheet;
 import com.microsoft.fluentui.bottomsheet.BottomSheetItem;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -36,7 +41,7 @@ public class NumberUtilsActivity extends DemoActivity implements BottomSheetItem
     }
 
     private void init() {
-        View readModeChangeIcon = ViewUtils.createIcon(this, R.drawable.ic_fluent_text_change_settings_24_regular);
+        View readModeChangeIcon = ViewUtils.createIcon(this, R.drawable.ic_fluent_reading_mode_mobile_24_regular);
         readModeChangeIcon.setOnClickListener(view -> {
             ArrayList<BottomSheetItem> items = new ArrayList<>();
             items.add(new BottomSheetItem(R.id.read_mode_digit, R.drawable.ic_fluent_number_row_24_regular, getString(R.string.read_mode_digit)));
@@ -94,15 +99,10 @@ public class NumberUtilsActivity extends DemoActivity implements BottomSheetItem
     }
 
     @Override
-    public void onBottomSheetItemClick(@NotNull BottomSheetItem bottomSheetItem) {
-        switch (bottomSheetItem.getId()) {
-            case R.id.read_mode_digit:
-                numberReadMode = NumberUtils.ReadMode.DIGIT;
-                break;
-            case R.id.read_mode_number:
-                numberReadMode = NumberUtils.ReadMode.NUMBER;
-                break;
-        }
+    public void onBottomSheetItemClick(@NonNull BottomSheetItem bottomSheetItem) {
+        int id = bottomSheetItem.getId();
+        if (id == R.id.read_mode_digit) numberReadMode = NumberUtils.ReadMode.DIGIT;
+        else if (id == R.id.read_mode_number) numberReadMode = NumberUtils.ReadMode.NUMBER;
 
         updateNumberConversionResult();
     }

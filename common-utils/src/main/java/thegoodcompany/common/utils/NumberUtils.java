@@ -1,12 +1,21 @@
+/*
+ * Copyright (c) The Good Company. All rights reserved.
+ * Licensed under the MIT License.
+ */
+
 package thegoodcompany.common.utils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.jetbrains.annotations.Contract;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class NumberUtils {
+    private static final String DEF_SEPARATOR = " ";
+
     /**
      * Turns an {@link ArrayList} of integers into an array of integers
      * In places of null elements, the returned array has 0
@@ -42,8 +51,8 @@ public class NumberUtils {
      * Removes any unwanted characters from the string and parses it
      * into a double wrapper object.
      * If the the string contains multiple points (.), only
-     * the last one stays
-     * <p>
+     * the first one stays
+     *
      * This can be useful specially in places like query
      *
      * @param str      The string from which numbers are to be extracted
@@ -52,14 +61,26 @@ public class NumberUtils {
      * @return A Double Object from the given string
      */
     @Nullable
+    @Contract("_, !null -> !null")
     public static Double extractNumbers(@NonNull String str, @Nullable Double fallback) {
         StringBuilder builder = new StringBuilder(str);
 
-        for (int latestDotIndex = builder.indexOf("."), lastDotIndex = builder.lastIndexOf(".");
-             latestDotIndex != lastDotIndex;
-             latestDotIndex = builder.indexOf("."), lastDotIndex--) {
+        boolean hasProcessedDot = false;
+        for (int i = 0, len = builder.length(); i < len; ) {
+            char c = builder.charAt(i);
+            if (Character.isDigit(c)) {
+                i++;
+                continue;
+            }
 
-            builder.deleteCharAt(latestDotIndex);
+            if (!hasProcessedDot && c == '.') {
+                hasProcessedDot = true;
+                i++;
+                continue;
+            }
+
+            builder.deleteCharAt(i);
+            len--;
         }
 
         int length = builder.length();
@@ -78,7 +99,7 @@ public class NumberUtils {
     }
 
     @NonNull
-    private static StringBuilder toWordInternal(@NonNull String number, @NonNull String separator, @NonNull ReadMode readMode) {
+    private static StringBuilder toWordInternal(@NonNull String number, @NonNull ReadMode readMode, @NonNull String separator) {
         if (number.length() == 0) return new StringBuilder();
 
         Number[] numbers = Number.values();
@@ -92,72 +113,68 @@ public class NumberUtils {
 
         int length = numberBuilder.length();
 
-        if (readMode == ReadMode.DIGIT) {
-            char[] charDigits = numberBuilder.toString().toCharArray();
+        switch (readMode) {
+            case DIGIT:
+                char[] charDigits = numberBuilder.toString().toCharArray();
 
-            for (int i = 0; i < length; ) {
-                if (charDigits[i] == '.') wordBuilder.append("point");
-                else {
-                    int digit = Character.getNumericValue(charDigits[i]);
-                    if (digit < 0) {
-                        i++;
-                        continue;
+                for (int i = 0; ; ) {
+                    if (charDigits[i] == '.') wordBuilder.append("point");
+                    else {
+                        int digit = Character.getNumericValue(charDigits[i]);
+                        wordBuilder.append(numbers[digit].ones);
                     }
 
-                    wordBuilder.append(numbers[digit].ones);
+                    if (++i < length) wordBuilder.append(separator);
+                    else break;
                 }
+                break;
+            case NUMBER:
+                String strNumber = numberBuilder.toString();
+                int pointIndex = strNumber.indexOf('.');
+                String[] parts = StringUtils.halfReverseSplitAfterEach(Number.suffixes.length * 3, pointIndex != -1
+                        ? strNumber.substring(0, pointIndex) : strNumber);
 
-                if (++i < length) wordBuilder.append(separator);
-            }
-        } else {
-            String[] parts;
-            String strNumber = numberBuilder.toString();
-            int pointIndex = strNumber.indexOf('.');
+                boolean encounteredNonzero = false;
+                for (String part : parts) {
+                    if (encounteredNonzero)
+                        wordBuilder.append(separator).append(Number.suffixes[Number.suffixes.length - 1]);
 
-            if (pointIndex != -1)
-                parts = StringUtils.reverseSplitAfterEach(Number.suffixes.length * 3, strNumber.substring(0, pointIndex));
-            else parts = StringUtils.reverseSplitAfterEach(Number.suffixes.length * 3, strNumber);
+                    String[] periods = StringUtils.halfReverseSplitAfterEach(3, part);
+                    int periodCount = periods.length;
 
-            int partsCount = parts.length;
+                    boolean partEncounteredNonzero = false;
+                    boolean periodEncounteredNonzero = false;
+                    for (int periodIndex = 0; periodIndex < periodCount; periodIndex++) {
+                        if (periodEncounteredNonzero)
+                            wordBuilder.append(separator).append(Number.suffixes[periodCount - 1 - periodIndex]);
 
-            boolean encounteredNonzero = false;
-            for (int partIndex = 0; partIndex < partsCount; partIndex++) {
-                if (encounteredNonzero)
-                    wordBuilder.append(separator).append(Number.suffixes[Number.suffixes.length - 1]);
+                        periodEncounteredNonzero = false;
+                        String period = periods[periodIndex];
+                        int periodLength = period.length();
+                        for (int i = 0, place = periodLength - 1; i < periodLength; i++, place--) {
+                            char c = period.charAt(i);
+                            if (c == '0') continue;
+                            if (encounteredNonzero && (i > 0 || partEncounteredNonzero))
+                                wordBuilder.append(separator);
 
-                String[] periods = StringUtils.reverseSplitAfterEach(3, parts[partIndex]);
-                int periodsCount = periods.length;
+                            int nextIndexedNumber;
+                            if (c == '1' && place == 1 && (nextIndexedNumber = Character.getNumericValue(numberBuilder.charAt(++i))) != 0)
+                                wordBuilder.append(numbers[nextIndexedNumber].teens);
+                            else
+                                wordBuilder.append(numbers[Character.getNumericValue(c)].getValueAt(place));
 
-                boolean partEncounteredNonzero = false;
-                boolean periodEncounteredNonzero = false;
-                for (int periodIndex = 0; periodIndex < periodsCount; periodIndex++) {
-                    if (periodEncounteredNonzero)
-                        wordBuilder.append(separator).append(Number.suffixes[periodsCount - 1 - periodIndex]);
-
-                    periodEncounteredNonzero = false;
-                    String period = periods[periodIndex];
-                    int periodLength = period.length();
-                    for (int i = 0, place = periodLength - 1; i < periodLength; i++, place--) {
-                        char c = period.charAt(i);
-                        if (c == '0') continue;
-                        if (i > 0 || partEncounteredNonzero || (encounteredNonzero && periodIndex == 0))
-                            wordBuilder.append(separator);
-
-                        int nextIndexedNumber;
-                        if (c == '1' && place == 1 && (nextIndexedNumber = Character.getNumericValue(numberBuilder.charAt(++i))) != 0)
-                            wordBuilder.append(numbers[nextIndexedNumber].teens);
-                        else
-                            wordBuilder.append(numbers[Character.getNumericValue(c)].getValueAt(place));
-
-                        if (!periodEncounteredNonzero) {
-                            periodEncounteredNonzero = true;
-                            partEncounteredNonzero = true;
-                            encounteredNonzero = true;
+                            if (!periodEncounteredNonzero) {
+                                periodEncounteredNonzero = true;
+                                partEncounteredNonzero = true;
+                                encounteredNonzero = true;
+                            }
                         }
                     }
                 }
-            }
 
+                break;
+            default:
+                break;
         }
 
         return wordBuilder;
@@ -172,37 +189,44 @@ public class NumberUtils {
      */
     @NonNull
     public static String toWord(@NonNull String number, @NonNull ReadMode readMode) {
+        return toWord(number, readMode, DEF_SEPARATOR);
+    }
+
+    @NonNull
+    public static String toWord(@NonNull String number, @NonNull ReadMode readMode, @Nullable String separator) {
+        if (separator == null) separator = DEF_SEPARATOR;
         StringBuilder result;
-        String separator = " ";
 
         if (readMode == ReadMode.DIGIT) {
-            result = toWordInternal(number, separator, ReadMode.DIGIT);
+            result = toWordInternal(number, ReadMode.DIGIT, separator);
         } else {
             int periodIndex = number.indexOf('.');
             if (periodIndex != -1) {
-                result = toWordInternal(number.substring(0, periodIndex), separator, ReadMode.NUMBER);
+                result = toWordInternal(number.substring(0, periodIndex), ReadMode.NUMBER, separator);
                 if (result.length() > 0) result.append(separator);
-                result.append(toWordInternal(number.substring(periodIndex), separator, ReadMode.DIGIT));
+                result.append(toWordInternal(number.substring(periodIndex), ReadMode.DIGIT, separator));
             } else {
-                result = toWordInternal(number, separator, ReadMode.NUMBER);
+                result = toWordInternal(number, ReadMode.NUMBER, separator);
             }
         }
+
+        if (result.length() == 0) result.append(Number.ZERO.ones);
 
         result.setCharAt(0, Character.toUpperCase(result.charAt(0)));
         return result.toString();
     }
 
     private enum Number {
-        ZERO(0, "zero", "", ""),
-        ONE(1, "one", "ten", "eleven"),
-        TWO(2, "two", "twenty", "twelve"),
-        THREE(3, "three", "thirty", "thirteen"),
-        FOUR(4, "four", "forty", "fourteen"),
-        FIVE(5, "five", "fifty", "fifteen"),
-        SIX(6, "six", "sixty", "sixteen"),
-        SEVEN(7, "seven", "seventy", "seventeen"),
-        EIGHT(8, "eight", "eighty", "eighteen"),
-        NINE(9, "nine", "ninety", "nineteen");
+        ZERO("zero", "", ""),
+        ONE("one", "ten", "eleven"),
+        TWO("two", "twenty", "twelve"),
+        THREE("three", "thirty", "thirteen"),
+        FOUR("four", "forty", "fourteen"),
+        FIVE("five", "fifty", "fifteen"),
+        SIX("six", "sixty", "sixteen"),
+        SEVEN("seven", "seventy", "seventeen"),
+        EIGHT("eight", "eighty", "eighteen"),
+        NINE("nine", "ninety", "nineteen");
 
         private static final String[] suffixes = new String[]{
                 "thousand",
@@ -218,13 +242,11 @@ public class NumberUtils {
                 "decillion",
         };
 
-        private final int intValue;
         private final String ones;
         private final String tens;
         private final String teens;
 
-        Number(int intValue, String ones, String tens, String teens) {
-            this.intValue = intValue;
+        Number(String ones, String tens, String teens) {
             this.ones = ones;
             this.tens = tens;
             this.teens = teens;

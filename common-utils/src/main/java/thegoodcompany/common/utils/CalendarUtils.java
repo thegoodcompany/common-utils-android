@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) The Good Company. All rights reserved.
+ * Licensed under the MIT License.
+ */
+
 package thegoodcompany.common.utils;
 
 import androidx.annotation.NonNull;
@@ -36,7 +41,7 @@ public class CalendarUtils {
     /**
      * Calculates the difference between two dates.
      * {@code returnMode} defines how and which fields should be calculated
-     * <p>
+     *
      * Note: The first month of the year, January, is 0
      */
     @NonNull
@@ -159,6 +164,10 @@ public class CalendarUtils {
         }
     }
 
+    private static boolean fallsBeforeLeapDay(int month, int day) {
+        return month < Calendar.FEBRUARY || (month == Calendar.FEBRUARY && day <= 29);
+    }
+
     /**
      * Calculate number of leap days between two dates
      *
@@ -175,15 +184,13 @@ public class CalendarUtils {
 
         boolean isBeforeLeapYear = isLeapYear(beforeYear);
         boolean isAfterLeapYear = isLeapYear(afterYear);
+        boolean sameYear = afterYear == beforeYear;
 
-        //if previous year is leap year or the date is before/is february 29th
-        if (isBeforeLeapYear && (beforeMonth < Calendar.FEBRUARY || (beforeMonth == Calendar.FEBRUARY && beforeDay <= 29))) {
+        if (isBeforeLeapYear && fallsBeforeLeapDay(beforeMonth, beforeDay) && (!sameYear || !fallsBeforeLeapDay(afterMonth, afterDay))) {
             leapDays++;
         }
 
-        //if forward year is leap year or the date is/after february 29th
-        if (afterYear != beforeYear && (isAfterLeapYear && (afterMonth > Calendar.FEBRUARY || (afterMonth == Calendar.FEBRUARY &&
-                afterDay == 29)))) {
+        if (!sameYear && isAfterLeapYear && !fallsBeforeLeapDay(afterMonth, afterDay)) {
             leapDays++;
         }
 

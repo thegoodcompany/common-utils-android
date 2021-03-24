@@ -47,8 +47,8 @@ public class NumberUtilsTest {
         assertThat(NumberUtils.extractNumbers("542.33648", -1.0)).isEqualTo(542.33648);
         assertThat(NumberUtils.extractNumbers("54233648", -1.0)).isEqualTo(54233648);
         assertThat(NumberUtils.extractNumbers("-5a4b2c3d3e6f4g8h", -1.0)).isEqualTo(54233648);
-        assertThat(NumberUtils.extractNumbers("54.233.648", -1.0)).isEqualTo(54233.648);
-        assertThat(NumberUtils.extractNumbers("54.23a3.6bc4d8", -1.0)).isEqualTo(54233.648);
+        assertThat(NumberUtils.extractNumbers("54.233.648", -1.0)).isEqualTo(54.233648);
+        assertThat(NumberUtils.extractNumbers("54.23a3.6bc4d8", -1.0)).isEqualTo(54.233648);
     }
 
     @Test
@@ -66,10 +66,14 @@ public class NumberUtilsTest {
 
     @Test
     public void toWord_isCorrect() {
+        assertThat(NumberUtils.toWord("0", NumberUtils.ReadMode.DIGIT)).isEqualTo("Zero");
+        assertThat(NumberUtils.toWord(".", NumberUtils.ReadMode.DIGIT)).isEqualTo("Point");
         assertThat(NumberUtils.toWord("5634", NumberUtils.ReadMode.DIGIT)).isEqualTo("Five six three four");
         assertThat(NumberUtils.toWord("5634.7", NumberUtils.ReadMode.DIGIT)).isEqualTo("Five six three four point seven");
         assertThat(NumberUtils.toWord("-5634.7", NumberUtils.ReadMode.DIGIT)).isEqualTo("Minus five six three four point seven");
 
+        assertThat(NumberUtils.toWord("0", NumberUtils.ReadMode.NUMBER)).isEqualTo("Zero");
+        assertThat(NumberUtils.toWord("01", NumberUtils.ReadMode.NUMBER)).isEqualTo("One");
         assertThat(NumberUtils.toWord("452", NumberUtils.ReadMode.NUMBER)).isEqualTo("Four hundred fifty two");
         assertThat(NumberUtils.toWord("1011", NumberUtils.ReadMode.NUMBER)).isEqualTo("One thousand eleven");
         assertThat(NumberUtils.toWord("213", NumberUtils.ReadMode.NUMBER)).isEqualTo("Two hundred thirteen");

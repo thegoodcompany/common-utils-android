@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) The Good Company. All rights reserved.
+ * Licensed under the MIT License.
+ */
+
 package thegoodcompany.common.utilsdemo.utilis.list;
 
 import android.content.Context;
@@ -13,8 +18,6 @@ import com.microsoft.fluentui.listitem.ListItemView;
 import com.microsoft.fluentui.listitem.ListSubHeaderView;
 import com.microsoft.fluentui.widget.Button;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.LinkedHashMap;
 
 import thegoodcompany.common.utils.recyclerview.BaseItem;
@@ -26,7 +29,7 @@ import thegoodcompany.common.utilsdemo.databinding.ViewButtonBinding;
 
 public class ListItemAdapter<K extends Enum<K>> extends BaseListAdapter<K, ItemSection, HeaderItem, Item, RecyclerView.ViewHolder> {
     @NonNull
-    private Context mContext;
+    private final Context mContext;
 
     public ListItemAdapter(@NonNull Context context, LinkedHashMap<K, ItemSection> sectionMap) {
         super(sectionMap);
@@ -58,7 +61,7 @@ public class ListItemAdapter<K extends Enum<K>> extends BaseListAdapter<K, ItemS
     }
 
     @Override
-    protected void onBindViewHolder(@NotNull AfterWards runAfterwards, @NotNull RecyclerView.ViewHolder holder, int position) {
+    protected void onBindViewHolder(@NonNull AfterWards runAfterwards, @NonNull RecyclerView.ViewHolder holder, int position) {
         BaseItem baseItem = getItem(position);
 
         if (holder instanceof ItemViewHolder) {
@@ -101,7 +104,7 @@ public class ListItemAdapter<K extends Enum<K>> extends BaseListAdapter<K, ItemS
     }
 
     static class HeaderViewHolder extends RecyclerView.ViewHolder {
-        private ListSubHeaderView mSubHeaderView;
+        private final ListSubHeaderView mSubHeaderView;
 
         HeaderViewHolder(@NonNull ListSubHeaderView itemView) {
             super(itemView);
@@ -111,7 +114,7 @@ public class ListItemAdapter<K extends Enum<K>> extends BaseListAdapter<K, ItemS
     }
 
     static class ItemViewHolder extends RecyclerView.ViewHolder {
-        private ListItemView mItemView;
+        private final ListItemView mItemView;
 
         ItemViewHolder(@NonNull ListItemView itemView) {
             super(itemView);
@@ -121,7 +124,7 @@ public class ListItemAdapter<K extends Enum<K>> extends BaseListAdapter<K, ItemS
     }
 
     static class ButtonViewHolder extends RecyclerView.ViewHolder {
-        private Button mButton;
+        private final Button mButton;
 
         ButtonViewHolder(@NonNull View itemView) {
             super(itemView);

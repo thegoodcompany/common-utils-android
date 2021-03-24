@@ -1,10 +1,18 @@
+/*
+ * Copyright (c) The Good Company. All rights reserved.
+ * Licensed under the MIT License.
+ */
+
 package thegoodcompany.common.utils;
 
 import android.content.res.Resources;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class StringUtils {
+    public static final int MAX_LEN_EMAIL = 254;
+
     /**
      * Joins a list of integer values into a single string if and only if that value is not equal to {@code unless}
      * Each element is appended by their corresponding {@code appendants} followed by the {@code separator},
@@ -172,14 +180,16 @@ public class StringUtils {
     }
 
     /**
-     * Splits a string in reverse order after each specified number of characters
+     * Splits a string from end to start after each specified number of chars then
+     * returns the splitted strings in original order (ergo, in the order they appear\
+     * on the string)
      *
-     * @param count  number of character to skip before splitting the string
-     * @param string the string to split
+     * @param count number of character to skip before splitting the string
+     * @param string   the string to split
      * @return array of split strings
      */
     @NonNull
-    public static String[] reverseSplitAfterEach(int count, @NonNull String string) {
+    public static String[] halfReverseSplitAfterEach(int count, @NonNull String string) {
         int length = string.length();
         int arraySize = (int) Math.ceil((double) length / count);
 
@@ -193,15 +203,14 @@ public class StringUtils {
     }
 
     /**
-     * Splits a string in reverse order after each specified number to character
-     * and returns the array in reverse order
+     * Splits a string from end to start after each specified number of chars
      *
-     * @param count  number of character to skip before splitting the string
-     * @param string the string to split
-     * @return array of split strings
+     * @param count number of characters to skip before splitting the string
+     * @param string   the string to split
+     * @return array of splitted strings
      */
     @NonNull
-    public static String[] fullReverseSplitAfterEach(int count, @NonNull String string) {
+    public static String[] reverseSplitAfterEach(int count, @NonNull String string) {
         int length = string.length();
         int arraySize = (int) Math.ceil((double) length / count);
 
@@ -212,5 +221,11 @@ public class StringUtils {
         }
 
         return splitString;
+    }
+
+    public static boolean isValidEmail(@Nullable String email) {
+        return email != null &&
+                email.length() <= MAX_LEN_EMAIL &&
+                email.toLowerCase().matches("^[\\S]+@[\\S]+\\.[^.,/]+$");
     }
 }

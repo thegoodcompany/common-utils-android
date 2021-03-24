@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) The Good Company. All rights reserved.
+ * Licensed under the MIT License.
+ */
+
 package thegoodcompany.common.utilsdemo;
 
 import android.os.Bundle;
@@ -8,7 +13,6 @@ import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.microsoft.fluentui.datetimepicker.DateTimePicker;
 import com.microsoft.fluentui.datetimepicker.DateTimePickerDialog;
 
-import org.jetbrains.annotations.NotNull;
 import org.threeten.bp.Duration;
 import org.threeten.bp.ZonedDateTime;
 
@@ -69,7 +73,7 @@ public class CalendarUtilsActivity extends DemoActivity implements DateTimePicke
     }
 
     @Override
-    public void onDateTimePicked(@NotNull ZonedDateTime zonedDateTime, @NotNull Duration duration) {
+    public void onDateTimePicked(@NonNull ZonedDateTime zonedDateTime, @NonNull Duration duration) {
         this.startDate = zonedDateTime;
         this.duration = duration;
 

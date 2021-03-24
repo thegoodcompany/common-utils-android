@@ -18,7 +18,22 @@ public class StringUtilsTest {
     @Test
     public void splitting_isCorrect() {
         assertThat(StringUtils.splitAfterEach(3, "abcdefgh")).asList().containsExactly("abc", "def", "gh");
-        assertThat(StringUtils.reverseSplitAfterEach(6, "4785682")).asList().containsExactly("4", "785682");
-        assertThat(StringUtils.fullReverseSplitAfterEach(3, "85682")).asList().containsExactly("682", "85");
+        assertThat(StringUtils.halfReverseSplitAfterEach(6, "4785682")).asList().containsExactly("4", "785682");
+        assertThat(StringUtils.reverseSplitAfterEach(3, "85682")).asList().containsExactly("682", "85");
+    }
+
+    @Test
+    public void emailValidator_isCorrect() {
+        assertThat(StringUtils.isValidEmail("a@b.c")).isTrue();
+        assertThat(StringUtils.isValidEmail("abc@ijk.xyz")).isTrue();
+        assertThat(StringUtils.isValidEmail("abc@ijh.mno.xyz")).isTrue();
+        assertThat(StringUtils.isValidEmail("abc@ij.k.x")).isTrue();
+
+        assertThat(StringUtils.isValidEmail("a@b")).isFalse();
+        assertThat(StringUtils.isValidEmail("abc@x.")).isFalse();
+        assertThat(StringUtils.isValidEmail("abc@xyz")).isFalse();
+        assertThat(StringUtils.isValidEmail("abc@ijk.xy.")).isFalse();
+        assertThat(StringUtils.isValidEmail("@ijk.xy")).isFalse();
+        assertThat(StringUtils.isValidEmail("")).isFalse();
     }
 }

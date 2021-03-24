@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) The Good Company. All rights reserved.
+ * Licensed under the MIT License.
+ */
+
 package thegoodcompany.common.utilsdemo.utilis;
 
 import android.content.Context;
@@ -12,8 +17,6 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.widget.ImageViewCompat;
 
 import com.microsoft.fluentui.util.ThemeUtil;
-
-import org.jetbrains.annotations.NotNull;
 
 import thegoodcompany.common.utilsdemo.R;
 
@@ -42,7 +45,7 @@ public class ViewUtils {
         return drawable;
     }
 
-    @NotNull
+    @NonNull
     public static ImageView createTintedIcon(@NonNull Context context, @DrawableRes int imageId, @AttrRes int tint) {
         ImageView imageView = new ImageView(context);
         Drawable drawable = ContextCompat.getDrawable(context, imageId);

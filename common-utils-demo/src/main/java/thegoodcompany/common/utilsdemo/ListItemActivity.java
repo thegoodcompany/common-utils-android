@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) The Good Company. All rights reserved.
+ * Licensed under the MIT License.
+ */
+
 package thegoodcompany.common.utilsdemo;
 
 import android.graphics.drawable.Drawable;
@@ -20,8 +25,6 @@ import com.microsoft.fluentui.snackbar.Snackbar;
 import com.microsoft.fluentui.util.ThemeUtil;
 import com.microsoft.fluentui.util.ThemeUtilsKt;
 import com.microsoft.fluentui.util.ViewUtilsKt;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -97,7 +100,7 @@ public class ListItemActivity extends DemoActivity {
         binding.listContainer.setAdapter(adapter);
     }
 
-    @NotNull
+    @NonNull
     private LinkedHashMap<SectionIdentifier, ItemSection> createSectionMap() {
         LinkedHashMap<SectionIdentifier, ItemSection> sectionMap = new LinkedHashMap<>();
 
@@ -121,8 +124,8 @@ public class ListItemActivity extends DemoActivity {
                         .show());
     }
 
-    @NotNull
-    private ItemSection createSection(@NotNull SectionIdentifier identifier) {
+    @NonNull
+    private ItemSection createSection(@NonNull SectionIdentifier identifier) {
         HeaderItem headerItem = new HeaderItem(identifier.title).setAccessoryView(createSectionAccessoryView(identifier));
         ArrayList<Item> items = new ArrayList<>();
 
@@ -136,7 +139,7 @@ public class ListItemActivity extends DemoActivity {
         return new ItemSection(headerItem, items);
     }
 
-    @NotNull
+    @NonNull
     private View createItemAccessoryView(SectionIdentifier section, Item item) {
         ImageView accessoryView = new ImageView(this);
 
@@ -148,7 +151,7 @@ public class ListItemActivity extends DemoActivity {
         return accessoryView;
     }
 
-    @NotNull
+    @NonNull
     private View createSectionAccessoryView(SectionIdentifier section) {
         TextView accessoryView = new TextView(this);
         TextViewCompat.setTextAppearance(accessoryView, R.style.TextAppearance_AppTheme_SectionAccessoryValue);
@@ -161,7 +164,7 @@ public class ListItemActivity extends DemoActivity {
 
     private void showItemActions(SectionIdentifier section, Item item) {
         ArrayList<BottomSheetItem> sheetItems = new ArrayList<>();
-        sheetItems.add(new BottomSheetItem(R.id.action_remove_item, R.drawable.ic_fluent_remove_24_regular, getString(R.string.remove_item)));
+        sheetItems.add(new BottomSheetItem(R.id.action_remove_item, R.drawable.ic_fluent_delete_24_regular, getString(R.string.remove_item)));
 
         BottomSheetDialog dialog = new BottomSheetDialog(this, sheetItems);
         dialog.setOnItemClickListener(bottomSheetItem -> {
@@ -176,26 +179,23 @@ public class ListItemActivity extends DemoActivity {
     private void showSectionActions(SectionIdentifier section) {
         ArrayList<BottomSheetItem> sheetItems = new ArrayList<>();
         sheetItems.add(new BottomSheetItem(R.id.action_add_item, R.drawable.ic_fluent_add_24_regular, getString(R.string.add_item)));
-        sheetItems.add(new BottomSheetItem(R.id.action_clear_section, R.drawable.ic_fluent_erase_24_regular, getString(R.string.remove_section_items)));
-        sheetItems.add(new BottomSheetItem(R.id.action_remove_section, R.drawable.ic_fluent_remove_24_regular, getString(R.string.remove_section)));
+        sheetItems.add(new BottomSheetItem(R.id.action_clear_section, R.drawable.ic_fluent_line_horizontal_1_20_regular, getString(R.string.remove_section_items)));
+        sheetItems.add(new BottomSheetItem(R.id.action_remove_section, R.drawable.ic_fluent_delete_24_regular, getString(R.string.remove_section)));
 
         BottomSheetDialog dialog = new BottomSheetDialog(this, sheetItems);
         dialog.setOnItemClickListener(bottomSheetItem -> {
-            switch (bottomSheetItem.getId()) {
-                case R.id.action_add_item:
-                    Item item = createItem();
-                    item.setAccessoryView(createItemAccessoryView(section, item));
+            int id = bottomSheetItem.getId();
+            if (id == R.id.action_add_item) {
+                Item item = createItem();
+                item.setAccessoryView(createItemAccessoryView(section, item));
 
-                    adapter.addItem(section, item);
-                    collapseAppbar();
-                    binding.listContainer.scrollToPosition(adapter.getItemPosition(item));
-                    break;
-                case R.id.action_clear_section:
-                    adapter.clearSectionItems(section);
-                    break;
-                case R.id.action_remove_section:
-                    adapter.removeSection(section);
-                    break;
+                adapter.addItem(section, item);
+                collapseAppbar();
+                binding.listContainer.scrollToPosition(adapter.getItemPosition(item));
+            } else if (id == R.id.action_clear_section) {
+                adapter.clearSectionItems(section);
+            } else if (id == R.id.action_remove_section) {
+                adapter.removeSection(section);
             }
         });
 
