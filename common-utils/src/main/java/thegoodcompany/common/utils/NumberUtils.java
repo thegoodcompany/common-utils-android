@@ -16,6 +16,8 @@ import java.util.Collections;
 public class NumberUtils {
     private static final String DEF_SEPARATOR = " ";
 
+    private NumberUtils() { }
+
     /**
      * Turns an {@link ArrayList} of integers into an array of integers
      * In places of null elements, the returned array has 0
@@ -214,6 +216,78 @@ public class NumberUtils {
 
         result.setCharAt(0, Character.toUpperCase(result.charAt(0)));
         return result.toString();
+    }
+
+    @NonNull
+    public static int[] toPrimitive(@NonNull Integer[] ls) {
+        int len = ls.length;
+        int[] primitive = new int[len];
+
+        for (int i = 0; i < len; i++) {
+            primitive[i] = ls[i];
+        }
+
+        return primitive;
+    }
+
+    @NonNull
+    public static Integer[] toBoxed(@NonNull int[] ls) {
+        int len = ls.length;
+        Integer[] boxed = new Integer[len];
+
+        for (int i = 0; i < len; i++) {
+            boxed[i] = ls[i];
+        }
+
+        return boxed;
+    }
+
+    @NonNull
+    public static long[] toPrimitive(@NonNull Long[] ls) {
+        int len = ls.length;
+        long[] primitive = new long[len];
+
+        for (int i = 0; i < len; i++) {
+            primitive[i] = ls[i];
+        }
+
+        return primitive;
+    }
+
+    @NonNull
+    public static Long[] toBoxed(@NonNull long[] ls) {
+        int len = ls.length;
+        Long[] boxed = new Long[len];
+
+        for (int i = 0; i < len; i++) {
+            boxed[i] = ls[i];
+        }
+
+        return boxed;
+    }
+
+    @NonNull
+    public static double[] toPrimitive(@NonNull Double[] ls) {
+        int len = ls.length;
+        double[] primitive = new double[len];
+
+        for (int i = 0; i < len; i++) {
+            primitive[i] = ls[i];
+        }
+
+        return primitive;
+    }
+
+    @NonNull
+    public static Double[] toBoxed(@NonNull double[] ls) {
+        int len = ls.length;
+        Double[] boxed = new Double[len];
+
+        for (int i = 0; i < len; i++) {
+            boxed[i] = ls[i];
+        }
+
+        return boxed;
     }
 
     private enum Number {

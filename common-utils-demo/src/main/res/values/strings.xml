@@ -47,4 +47,5 @@
     <string name="read_mode_digit">Read as Digits</string>
     <string name="read_mode_number">Read as Number</string>
     <string name="remove_section_items">Remove all Items</string>
+    <string name="info_operation_successful_copy">Copied</string>
 </resources>

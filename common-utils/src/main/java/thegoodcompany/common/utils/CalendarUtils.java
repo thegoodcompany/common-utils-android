@@ -38,6 +38,8 @@ public class CalendarUtils {
     private static final long DAY_DIVISOR = HOUR_DIVISOR * 24;
     private static final long YEAR_DIVISOR = DAY_DIVISOR * 365; //365 is important and shouldn't be 366
 
+    private CalendarUtils() { }
+
     /**
      * Calculates the difference between two dates.
      * {@code returnMode} defines how and which fields should be calculated

@@ -14,14 +14,17 @@ import androidx.annotation.NonNull;
 
 import com.microsoft.fluentui.bottomsheet.BottomSheet;
 import com.microsoft.fluentui.bottomsheet.BottomSheetItem;
+import com.microsoft.fluentui.listitem.ListItemView;
+import com.microsoft.fluentui.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
 import thegoodcompany.common.utils.NumberUtils;
+import thegoodcompany.common.utils.SystemUtils;
 import thegoodcompany.common.utilsdemo.databinding.ActivityNumberUtilsBinding;
 import thegoodcompany.common.utilsdemo.utilis.ViewUtils;
 
-public class NumberUtilsActivity extends DemoActivity implements BottomSheetItem.OnClickListener {
+public class NumberUtilsActivity extends DemoActivity implements BottomSheetItem.OnClickListener, View.OnClickListener {
     private static final String SELECT_READ_MODE_TAG = "thegoodcompany.common.utilsdemo.NumberUtilsActivity.tag.READ_MODE";
 
     private ActivityNumberUtilsBinding binding;
@@ -54,6 +57,9 @@ public class NumberUtilsActivity extends DemoActivity implements BottomSheetItem
         });
 
         binding.numberConversionResult.setCustomAccessoryView(readModeChangeIcon);
+
+        binding.numberConversionResult.setOnClickListener(this);
+        binding.numberExtractionResult.setOnClickListener(this);
 
         binding.numberExtractionEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -105,5 +111,14 @@ public class NumberUtilsActivity extends DemoActivity implements BottomSheetItem
         else if (id == R.id.read_mode_number) numberReadMode = NumberUtils.ReadMode.NUMBER;
 
         updateNumberConversionResult();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v instanceof ListItemView) {
+            SystemUtils.copyText(this, ((ListItemView) v).getTitle());
+            makeSnackbar(R.string.info_operation_successful_copy, SnackDuration.SHORT, Snackbar.Style.REGULAR)
+                    .show();
+        }
     }
 }

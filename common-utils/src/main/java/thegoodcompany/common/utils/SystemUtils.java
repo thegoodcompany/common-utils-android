@@ -5,6 +5,8 @@
 
 package thegoodcompany.common.utils;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.view.View;
 import android.view.Window;
@@ -15,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class SystemUtils {
+
+    private SystemUtils() { }
     /**
      * Gives focus on {@param view}, then shows the soft keyboard.
      *
@@ -43,5 +47,15 @@ public class SystemUtils {
             return imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
         return false;
+    }
+
+    public static void copyText(@NonNull Context context, String text) {
+        copyText(context, text, text);
+    }
+
+    public static void copyText(@NonNull Context context, @NonNull String label, @NonNull String text) {
+        ClipboardManager manager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData data = ClipData.newPlainText(label, text);
+        manager.setPrimaryClip(data);
     }
 }
