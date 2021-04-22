@@ -36,4 +36,8 @@ public final class ObjectUtils {
         // noinspection EqualsReplaceableByObjectsCall
         return o == o2 || (o != null && o.equals(o2));
     }
+    
+    public static boolean nonNull(@Nullable Object o) {
+        return o != null;
+    }
 }

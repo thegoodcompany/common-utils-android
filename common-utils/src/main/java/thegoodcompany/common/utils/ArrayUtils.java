@@ -17,6 +17,13 @@ public class ArrayUtils {
 
     private ArrayUtils() { }
 
+    /**
+     * Combines an array of arrays into one array
+     *
+     * @param ts array of arrays to combine
+     * @param <T> type of value the arrays hold
+     * @return a new array that is super set of the given arrays
+     */
     @NonNull
     @SafeVarargs
     public static <T> T[] combine(@NonNull T[]... ts) {
@@ -115,5 +122,64 @@ public class ArrayUtils {
         public int size() {
             return mOriginal.size();
         }
+    }
+
+    /**
+     * @see #transform(List, ArrayTransformer)
+     */
+    @NonNull
+    public static <T> List<T> transform(@NonNull int[] ints, @NonNull ArrayTransformer<Integer, T> transformer) {
+        return transform(NumberUtils.toBoxed(ints), transformer);
+    }
+
+    /**
+     * @see #transform(List, ArrayTransformer)
+     */
+    @NonNull
+    public static <T> List<T> transform(@NonNull long[] longs, @NonNull ArrayTransformer<Long, T> transformer) {
+        return transform(NumberUtils.toBoxed(longs), transformer);
+    }
+
+    /**
+     * @see #transform(List, ArrayTransformer)
+     */
+    @NonNull
+    public static <T> List<T> transform(@NonNull double[] longs, @NonNull ArrayTransformer<Double, T> transformer) {
+        return transform(NumberUtils.toBoxed(longs), transformer);
+    }
+
+    /**
+     * @see #transform(List, ArrayTransformer)
+     */
+    @NonNull
+    public static <F, T> List<T> transform(@NonNull F[] fs, @NonNull ArrayTransformer<F, T> transformer) {
+        return transform(Arrays.asList(fs), transformer);
+    }
+
+    /**
+     * Accepts a transformer function and invokes it with every element from {@code src} then returns a new
+     * {@link List} containing return values of {@code transformer}
+     *
+     * @param src the source list
+     * @param transformer a transformer function that will be invoked on every element from {@code src}
+     * @param <F> type of elements the source list holds
+     * @param <T> type of elements the returned list hold
+     * @return a new list containing all the returns values from {@code transformer}
+     */
+    @NonNull
+    public static <F, T> List<T> transform(@NonNull List<F> src, @NonNull ArrayTransformer<F, T> transformer) {
+        int size = src.size();
+        List<T> tos = new ArrayList<>(size);
+
+        for (int i = 0; i < size; i++) {
+            F f = src.get(i);
+            tos.add(transformer.transform(f, i, src));
+        }
+
+        return tos;
+    }
+
+    public interface ArrayTransformer<F, T> {
+        T transform(F t, int index, List<F> source);
     }
 }

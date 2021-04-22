@@ -10,8 +10,8 @@ import androidx.annotation.Nullable;
 
 import org.jetbrains.annotations.Contract;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class NumberUtils {
     private static final String DEF_SEPARATOR = " ";
@@ -19,14 +19,14 @@ public class NumberUtils {
     private NumberUtils() { }
 
     /**
-     * Turns an {@link ArrayList} of integers into an array of integers
+     * Turns n {@link List} of integers into an array of integers
      * In places of null elements, the returned array has 0
      *
-     * @param integers The {@link ArrayList} of integers that will be converted
-     * @return An array of integers from the given {@link ArrayList}
+     * @param integers The {@link List} of integers that will be converted
+     * @return An array of integers from the given {@link List}
      */
     @NonNull
-    public static int[] toArray(@NonNull ArrayList<Integer> integers) {
+    public static int[] toArray(@NonNull List<Integer> integers) {
         int[] ints = new int[integers.size()];
 
         int size = integers.size();
@@ -44,7 +44,7 @@ public class NumberUtils {
      * Returns an array of int of non-null integers from {@code integers}
      */
     @NonNull
-    public static int[] toArrayRemoveNull(@NonNull ArrayList<Integer> integers) {
+    public static int[] toArrayRemoveNull(@NonNull List<Integer> integers) {
         integers.removeAll(Collections.singleton(null));
         return toArray(integers);
     }
@@ -219,77 +219,77 @@ public class NumberUtils {
     }
 
     @NonNull
-    public static int[] toPrimitive(@NonNull Integer[] ls) {
-        int len = ls.length;
+    public static int[] toPrimitive(@NonNull Integer[] src) {
+        int len = src.length;
         int[] primitive = new int[len];
 
         for (int i = 0; i < len; i++) {
-            primitive[i] = ls[i];
+            primitive[i] = src[i];
         }
 
         return primitive;
     }
 
     @NonNull
-    public static Integer[] toBoxed(@NonNull int[] ls) {
-        int len = ls.length;
+    public static Integer[] toBoxed(@NonNull int[] src) {
+        int len = src.length;
         Integer[] boxed = new Integer[len];
-
+        
         for (int i = 0; i < len; i++) {
-            boxed[i] = ls[i];
+            boxed[i] = src[i];
         }
 
         return boxed;
     }
 
     @NonNull
-    public static long[] toPrimitive(@NonNull Long[] ls) {
-        int len = ls.length;
+    public static long[] toPrimitive(@NonNull Long[] src) {
+        int len = src.length;
         long[] primitive = new long[len];
 
         for (int i = 0; i < len; i++) {
-            primitive[i] = ls[i];
+            primitive[i] = src[i];
         }
 
         return primitive;
     }
 
     @NonNull
-    public static Long[] toBoxed(@NonNull long[] ls) {
-        int len = ls.length;
+    public static Long[] toBoxed(@NonNull long[] src) {
+        int len = src.length;
         Long[] boxed = new Long[len];
 
         for (int i = 0; i < len; i++) {
-            boxed[i] = ls[i];
+            boxed[i] = src[i];
         }
 
         return boxed;
     }
 
     @NonNull
-    public static double[] toPrimitive(@NonNull Double[] ls) {
-        int len = ls.length;
+    public static double[] toPrimitive(@NonNull Double[] src) {
+        int len = src.length;
         double[] primitive = new double[len];
 
         for (int i = 0; i < len; i++) {
-            primitive[i] = ls[i];
+            primitive[i] = src[i];
         }
 
         return primitive;
     }
 
     @NonNull
-    public static Double[] toBoxed(@NonNull double[] ls) {
-        int len = ls.length;
+    public static Double[] toBoxed(@NonNull double[] src) {
+        int len = src.length;
         Double[] boxed = new Double[len];
 
         for (int i = 0; i < len; i++) {
-            boxed[i] = ls[i];
+            boxed[i] = src[i];
         }
 
         return boxed;
     }
-
+    
     private enum Number {
         ZERO("zero", "", ""),
         ONE("one", "ten", "eleven"),

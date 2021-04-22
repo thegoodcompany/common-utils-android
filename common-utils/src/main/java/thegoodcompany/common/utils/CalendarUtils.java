@@ -40,6 +40,9 @@ public class CalendarUtils {
 
     private CalendarUtils() { }
 
+    // TODO: 022, Apr 22 include hour, seconds when calculating
+    // TODO: 022, Apr 22 use some other form of return mode
+    // TODO: 022, Apr 22 create overloaded methods
     /**
      * Calculates the difference between two dates.
      * {@code returnMode} defines how and which fields should be calculated
@@ -212,10 +215,6 @@ public class CalendarUtils {
         return subjectMonth < destinationMonth || (subjectMonth == destinationMonth && subjectDay < destinationDay);
     }
 
-    public static int getFieldsCount() {
-        return ELEMENTS;
-    }
-
     public enum Month {
         JANUARY(31),
         FEBRUARY(28),
@@ -230,7 +229,7 @@ public class CalendarUtils {
         NOVEMBER(30),
         DECEMBER(31);
 
-        private int mNumberOfDays;
+        private final int mNumberOfDays;
 
         Month(int numberOfDays) {
             mNumberOfDays = numberOfDays;
