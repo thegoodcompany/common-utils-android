@@ -99,6 +99,29 @@ public class ListItemAdapter<K extends Enum<K>> extends BaseListAdapter<K, ItemS
     }
 
     @Override
+    public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
+        super.onViewRecycled(holder);
+
+        if (holder instanceof HeaderViewHolder) {
+            HeaderViewHolder header = (HeaderViewHolder) holder;
+            header.mSubHeaderView.setTitle("");
+            header.mSubHeaderView.setCustomAccessoryView(null);
+        } else if (holder instanceof ItemViewHolder) {
+            ItemViewHolder item = (ItemViewHolder) holder;
+            item.mItemView.setTitle("");
+            item.mItemView.setSubtitle("");
+            item.mItemView.setFooter("");
+
+            item.mItemView.setCustomViewSize(ListItemView.Companion.getDEFAULT_CUSTOM_VIEW_SIZE());
+            item.mItemView.setCustomView(null);
+            item.mItemView.setCustomAccessoryView(null);
+        } else if (holder instanceof ButtonViewHolder) {
+            ButtonViewHolder button = (ButtonViewHolder) holder;
+            button.mButton.setText("");
+        }
+    }
+
+    @Override
     public int getItemPosition(Item item) {
         return super.getItemPosition(item);
     }
