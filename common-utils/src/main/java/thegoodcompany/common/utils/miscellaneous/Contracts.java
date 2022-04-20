@@ -20,4 +20,8 @@ public final class Contracts {
     public interface Consumer<T> {
         void consume(T t);
     }
+
+    public interface Predicate<T> {
+        boolean test(T t);
+    }
 }

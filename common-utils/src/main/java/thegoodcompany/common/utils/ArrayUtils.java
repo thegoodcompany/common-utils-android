@@ -7,6 +7,7 @@ package thegoodcompany.common.utils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.util.Predicate;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
@@ -177,6 +178,20 @@ public class ArrayUtils {
         }
 
         return tos;
+    }
+
+    public static <T> boolean every(@NonNull List<T> list, @NonNull Predicate<T> predicate) {
+        for (T t : list)
+            if (!predicate.test(t)) return false;
+
+        return true;
+    }
+
+    public static <T> boolean some(@NonNull List<T> list, @NonNull Predicate<T> predicate) {
+        for (T t : list)
+            if (predicate.test(t)) return true;
+
+        return false;
     }
 
     public interface ArrayTransformer<F, T> {
